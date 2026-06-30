@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-100 text-gray-800 font-sans;
+  }
+
+  ::selection {
+    @apply bg-priority-high/40 text-primary;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-lg border border-gray-200 p-5;
+  }
+
+  .btn-primary {
+    @apply px-5 py-2 bg-primary text-white rounded-md font-medium hover:bg-[#2a4560] transition-colors;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-md font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200/60 transition-colors;
+  }
+
+  .btn-danger {
+    @apply px-5 py-2 bg-red-500 text-white rounded-md font-medium hover:bg-red-600 transition-colors;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 rounded-md border border-gray-300 bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-gray-800 placeholder-gray-400;
+  }
+
+  .badge-high {
+    @apply px-2.5 py-0.5 text-xs font-medium rounded bg-priority-high/30 text-primary;
+  }
+
+  .badge-medium {
+    @apply px-2.5 py-0.5 text-xs font-medium rounded bg-priority-medium/30 text-primary;
+  }
+
+  .badge-low {
+    @apply px-2.5 py-0.5 text-xs font-medium rounded bg-priority-low/60 text-gray-600;
+  }
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-priority-high;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
