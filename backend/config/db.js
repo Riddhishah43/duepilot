@@ -12,4 +12,8 @@ const connectDB = async () => {
   }
 };
 
+mongoose.connection.on("error", (err) => {
+  console.error(`Mongoose connection error: ${err.message}`);
+});
+
 module.exports = connectDB;
