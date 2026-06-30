@@ -1,4 +1,5 @@
-# DuePilot AI — Navigate Every Deadline
+# DuePilot AI
+<div align="center"><b>Navigate Every Deadline</b></div>
 
 <div align="center">
 
@@ -158,7 +159,7 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 ```bash
 # Clone the repository
 git clone https://github.com/Riddhishah43/duepilot.git
-cd deadline-guardian-ai
+cd duepilot
 
 # Install backend dependencies
 cd backend
@@ -207,7 +208,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 ## Project Structure
 
 ```
-deadline-guardian-ai/
+duepilot-ai/
 ├── backend/
 │   ├── config/                # Database configuration
 │   ├── controllers/           # Route handlers
