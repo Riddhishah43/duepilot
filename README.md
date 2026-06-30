@@ -15,6 +15,10 @@
 
 **An intelligent AI-powered productivity platform that helps you finish tasks — not just remember them.**
 
+<br>
+
+🌐 **Live App:** [rs-duepilot.vercel.app](https://rs-duepilot.vercel.app) · **API:** [duepilot-backend-production.up.railway.app](https://duepilot-backend-production.up.railway.app)
+
 </div>
 
 ---
@@ -38,8 +42,11 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 | **Risk Analysis** | Analyzes tasks against deadlines to detect at-risk items before they're missed |
 | **Smart Scheduling** | Generates optimized daily schedules based on priorities and available time slots |
 | **Daily & Weekly Reports** | AI coach generates personalized productivity reports with scores, trends, and suggestions |
-| **Rescue Mode** | Emergency intervention for critical deadlines — generates a focused rescue plan |
+| **Holistic Rescue Mode** | Emergency intervention analyzing ALL pending tasks — generates a focused rescue plan prioritizing the most critical deadlines |
 | **Goal Milestone Planning** | Long-term goals get AI-suggested milestones to keep you on track |
+| **AI Study Planner** | Generates optimized study/task plans with time blocks, breaks, and smart scheduling |
+| **Pattern Insights** | Detects behavioral patterns (procrastination, peak hours, bottlenecks) from granular action logs |
+| **Smart Notifications** | Groq-generated context-aware notifications with 5 subtypes (deadline, encouragement, milestone, tip, warning) |
 | **Smart Reminders** | Context-aware reminders generated based on task status and deadlines |
 
 ### 📋 Task Management
@@ -56,7 +63,9 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 - Weekly productivity trends (Recharts line chart)
 - Category breakdown (pie chart)
 - Tasks by category (bar chart)
-- Completion rate, focus hours, and streak tracking
+- Priority distribution chart
+- Risk trend over time (line chart)
+- Completion rate, focus hours, streak tracking, and daily scores
 
 ### 🎯 Goal Tracking
 
@@ -213,8 +222,8 @@ duepilot-ai/
 │   ├── config/                # Database configuration
 │   ├── controllers/           # Route handlers
 │   ├── middleware/            # Auth & error middleware
-│   ├── models/                # Mongoose schemas (7 models)
-│   ├── routes/                # API route definitions (6 route files)
+│   ├── models/                # Mongoose schemas (9 models)
+│   ├── routes/                # API route definitions (8 route files)
 │   ├── services/              # Business logic (Groq AI, Analytics, Calendar)
 │   ├── utils/                 # Helper functions
 │   ├── validators/            # Request validation rules
@@ -225,13 +234,15 @@ duepilot-ai/
 │   │   ├── components/common/ # Reusable UI components
 │   │   ├── context/           # React context providers
 │   │   ├── layouts/           # Page layouts (MainLayout, AuthLayout)
-│   │   ├── pages/             # Route page components (13 pages)
+│   │   ├── pages/             # Route page components (15+ pages)
 │   │   ├── services/          # API client (Axios instance)
 │   │   ├── App.jsx            # Route definitions
 │   │   └── main.jsx           # Application entry point
 │   ├── index.html
 │   ├── vite.config.js
 │   └── tailwind.config.js
+├── railway.json               # Railway config-as-code
+├── .railway/                  # Railway IaC configuration
 └── .gitignore
 ```
 
@@ -268,17 +279,30 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 |--------|----------|-------------|------|
 | `POST` | `/api/ai/analyze-task` | Analyze and break down a task | Yes |
 | `POST` | `/api/ai/schedule` | Generate daily schedule | Yes |
-| `POST` | `/api/ai/rescue` | Generate rescue plan | Yes |
+| `POST` | `/api/ai/rescue` | Generate holistic rescue plan (all pending tasks) | Yes |
 | `GET` | `/api/ai/daily-report` | AI daily productivity report | Yes |
 | `GET` | `/api/ai/weekly-report` | AI weekly productivity report | Yes |
 | `POST` | `/api/ai/plan-goal` | Plan goal milestones | Yes |
 | `POST` | `/api/ai/generate-reminder` | Generate smart reminder | Yes |
 
+### Study Plans
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `POST` | `/api/study-plans/generate` | Generate AI study plan from tasks | Yes |
+| `GET` | `/api/study-plans` | List saved study plans | Yes |
+
+### Patterns
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `GET` | `/api/patterns` | Get detected behavioral patterns | Yes |
+
 ### Analytics
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| `GET` | `/api/analytics/dashboard` | Dashboard metrics | Yes |
+| `GET` | `/api/analytics/dashboard` | Dashboard metrics (score, dist, risk, trend, streak, focus) | Yes |
 | `GET` | `/api/analytics` | Full analytics data | Yes |
 
 ### Notifications
@@ -287,6 +311,7 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 |--------|----------|-------------|------|
 | `GET` | `/api/notifications` | List notifications | Yes |
 | `GET` | `/api/notifications/important` | Important notifications | Yes |
+| `POST` | `/api/notifications/generate` | Generate smart AI notifications | Yes |
 | `POST` | `/api/notifications/generate-deadline` | Generate deadline reminders | Yes |
 | `PATCH` | `/api/notifications/:id/read` | Mark as read | Yes |
 | `PATCH` | `/api/notifications/read-all` | Mark all as read | Yes |
@@ -304,6 +329,14 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 | `timezone` | String | Default: "UTC" |
 | `productivityScore` | Number | Default: 0 |
 | `focusPreferences` | Object | Pomodoro config |
+| `avatar` | String | Emoji avatar |
+| `bio` | String | Short bio |
+| `dailyGoal` | Number | Daily task completion target |
+| `weeklyGoal` | Number | Weekly task completion target |
+| `theme` | String | "light" or "dark" |
+| `studyPreferences` | Object | Study planner settings |
+| `defaultView` | String | Default dashboard view |
+| `notificationPreferences` | Object | Per-type notification toggles |
 
 ### Task
 | Field | Type | Notes |
@@ -319,6 +352,23 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 | `riskReason` | String | AI explanation |
 | `aiRecommendation` | String | AI suggestion |
 
+### ActionLog
+| Field | Type | Notes |
+|-------|------|-------|
+| `user` | ObjectId | Ref User |
+| `task` | ObjectId | Ref Task |
+| `actionType` | String | created, started, paused, completed, missed, etc. |
+| `timestamp` | Date | When the action occurred |
+| `metadata` | Object | Additional context (duration, notes) |
+
+### StudyPlan
+| Field | Type | Notes |
+|-------|------|-------|
+| `user` | ObjectId | Ref User |
+| `tasks` | Array | Tasks included in the plan |
+| `plan` | Object | AI-generated plan with time blocks |
+| `date` | Date | The day this plan is for |
+
 ### Subtask, Goal, Notification, CalendarEvent, Analytics
 (Full schemas available in `backend/models/`)
 
@@ -326,22 +376,41 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 
 ## Deployment
 
+The production app is live at:
+- **Frontend:** [rs-duepilot.vercel.app](https://rs-duepilot.vercel.app)
+- **Backend API:** [duepilot-backend-production.up.railway.app](https://duepilot-backend-production.up.railway.app)
+
 ### Frontend (Vercel)
+
+The frontend is auto-deployed from GitHub via the Vercel dashboard (project: `duepilot-ai`).
+
 ```bash
 cd frontend
-npm run build
-# Deploy the dist/ folder to Vercel
+# Deploy with Vercel CLI
+vercel --prod --env VITE_API_URL=https://duepilot-backend-production.up.railway.app
 ```
 
-### Backend (Render / Railway)
-```bash
-cd backend
-npm start
-# Set environment variables in your hosting dashboard
-```
+| Variable | Value |
+|----------|-------|
+| `VITE_API_URL` | `https://duepilot-backend-production.up.railway.app` |
+
+### Backend (Railway)
+
+The backend is deployed from GitHub (`Riddhishah43/duepilot`) with **rootDirectory** set to `backend`. Builds use **Railpack** (auto-detect).
+
+Environment variables set in the Railway dashboard:
+
+| Variable | Value |
+|----------|-------|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret key for JWT signing |
+| `JWT_EXPIRES_IN` | `7d` |
+| `GROQ_API_KEY` | Groq AI API key |
+| `CLIENT_URL` | `https://rs-duepilot.vercel.app` |
 
 ### Database
 - MongoDB Atlas cluster — the connection string goes into `MONGODB_URI`
+- IP whitelist: `0.0.0.0/0` (allow from anywhere, required for Railway dynamic IPs)
 
 ---
 
