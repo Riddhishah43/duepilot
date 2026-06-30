@@ -2,6 +2,9 @@
   "name": "duepilot-ai-backend",
   "version": "1.0.0",
   "description": "DuePilot AI - Backend API",
+  "engines": {
+    "node": ">=18"
+  },
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
