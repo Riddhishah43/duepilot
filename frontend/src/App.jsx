@@ -7,6 +7,9 @@ import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import TaskManager from "./pages/TaskManager";
+import StudyPlanner from "./pages/StudyPlanner";
+import PatternInsights from "./pages/PatternInsights";
+import SmartNotifications from "./pages/SmartNotifications";
 
 import Targets from "./pages/Targets";
 import Analytics from "./pages/Analytics";
@@ -46,6 +49,9 @@ function App() {
         <Route path="/ai-coach" element={<ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute>} />
         <Route path="/focus" element={<ProtectedRoute><MainLayout><FocusMode /></MainLayout></ProtectedRoute>} />
         <Route path="/rescue" element={<ProtectedRoute><MainLayout><RescueMode /></MainLayout></ProtectedRoute>} />
+        <Route path="/study-planner" element={<ProtectedRoute><MainLayout><StudyPlanner /></MainLayout></ProtectedRoute>} />
+        <Route path="/insights" element={<ProtectedRoute><MainLayout><PatternInsights /></MainLayout></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><MainLayout><SmartNotifications /></MainLayout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />

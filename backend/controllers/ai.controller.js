@@ -65,21 +65,36 @@ exports.generateSchedule = async (req, res, next) => {
 
 exports.rescueMode = async (req, res, next) => {
   try {
-    const { taskId } = req.body;
-    const task = await Task.findOne({ _id: taskId, userId: req.user._id });
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+    const tasks = await Task.find({
+      userId: req.user._id,
+      status: { $in: ["pending", "in-progress"] },
+      isArchived: false,
+    }).sort({ deadline: 1 });
+
+    if (tasks.length === 0) {
+      return res.status(404).json({ message: "No pending tasks to rescue" });
     }
 
-    const rescuePlan = await groqService.createRescuePlan({
-      title: task.title,
-      deadline: task.deadline,
-      progress: task.progress,
-      estimatedDuration: task.estimatedDuration,
-      description: task.description,
-    });
+    const tasksData = tasks.map((t) => ({
+      title: t.title,
+      description: t.description,
+      deadline: t.deadline,
+      estimatedDuration: t.estimatedDuration,
+      priority: t.priority,
+      progress: t.progress,
+      category: t.category,
+      riskScore: t.riskScore,
+      status: t.status,
+    }));
 
-    res.json({ rescuePlan, task });
+    const preferences = {
+      timezone: req.user.timezone,
+      productivityScore: req.user.productivityScore,
+    };
+
+    const rescuePlan = await groqService.createRescuePlan(tasksData, preferences);
+
+    res.json({ rescuePlan, totalTasks: tasks.length });
   } catch (error) {
     next(error);
   }

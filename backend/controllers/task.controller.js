@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const Task = require("../models/task.model");
 const Subtask = require("../models/subtask.model");
 const groqService = require("../services/groq.service");
+const { logAction } = require("../services/pattern.service");
 
 exports.getTasks = async (req, res, next) => {
   try {
@@ -86,6 +87,8 @@ exports.createTask = async (req, res, next) => {
       console.error("AI priority prediction failed:", aiError.message);
     }
 
+    logAction(req.user._id, "task_created", task);
+
     res.status(201).json({ task, subtasks });
   } catch (error) {
     next(error);
@@ -108,6 +111,17 @@ exports.updateTask = async (req, res, next) => {
       task.completedAt = new Date();
       task.progress = 100;
       await task.save();
+      logAction(req.user._id, "task_completed", task);
+    } else if (req.body.status === "missed") {
+      logAction(req.user._id, "task_missed", task);
+    } else if (req.body.deadline && req.body.deadline !== task.deadline?.toISOString()) {
+      logAction(req.user._id, "task_rescheduled", task, { prevDeadline: task.deadline });
+    } else {
+      logAction(req.user._id, "task_updated", task);
+    }
+
+    if (req.body.progress !== undefined) {
+      logAction(req.user._id, "task_progress", task, { progress: req.body.progress });
     }
 
     res.json({ task });

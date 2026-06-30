@@ -16,7 +16,7 @@ exports.getDashboardStats = async (req, res, next) => {
       weeklyAnalytics,
       todayEvents,
     ] = await Promise.all([
-      Task.find({ userId: req.user._id, createdAt: { $gte: today, $lte: endOfToday } }),
+      Task.find({ userId: req.user._id, deadline: { $gte: today, $lte: endOfToday }, status: { $ne: "completed" } }),
       Task.find({ userId: req.user._id, deadline: { $gte: today }, status: { $ne: "completed" } })
         .sort({ deadline: 1 })
         .limit(5),
@@ -48,38 +48,12 @@ exports.getAnalytics = async (req, res, next) => {
     const end = endDate ? new Date(endDate) : new Date();
     const start = startDate ? new Date(startDate) : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [dailyAnalytics, tasks, events] = await Promise.all([
+    const [dailyAnalytics, aggregates] = await Promise.all([
       analyticsService.getWeeklyAnalytics(req.user._id, end),
-      Task.find({ userId: req.user._id, createdAt: { $gte: start, $lte: end } }),
-      CalendarEvent.find({ userId: req.user._id, start: { $gte: start, $lte: end } }),
+      analyticsService.computeAggregates(req.user._id),
     ]);
 
-    const totalTasks = tasks.length;
-    const completedTasks = tasks.filter((t) => t.status === "completed").length;
-    const missedTasks = tasks.filter((t) => t.status === "missed").length;
-    const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
-    const categoryData = {};
-    tasks.forEach((t) => {
-      const cat = t.category || "general";
-      if (!categoryData[cat]) categoryData[cat] = { total: 0, completed: 0 };
-      categoryData[cat].total++;
-      if (t.status === "completed") categoryData[cat].completed++;
-    });
-
-    const totalFocusHours = events
-      .filter((e) => e.isWorkSession)
-      .reduce((sum, e) => sum + (new Date(e.end) - new Date(e.start)) / 3600000, 0);
-
-    res.json({
-      totalTasks,
-      completedTasks,
-      missedTasks,
-      completionRate,
-      totalFocusHours: Math.round(totalFocusHours * 10) / 10,
-      categoryData,
-      dailyAnalytics,
-    });
+    res.json({ ...aggregates, dailyAnalytics });
   } catch (error) {
     next(error);
   }

@@ -74,7 +74,7 @@ exports.getProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const allowedUpdates = ["name", "timezone", "avatar", "focusPreferences"];
+    const allowedUpdates = ["name", "timezone", "avatar", "bio", "theme", "dailyGoal", "weeklyGoal", "preferredStudyTime", "defaultView", "notificationPreferences", "focusPreferences"];
     const updates = {};
     allowedUpdates.forEach((field) => {
       if (req.body[field] !== undefined) {

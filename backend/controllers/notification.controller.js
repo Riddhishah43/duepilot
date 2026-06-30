@@ -1,6 +1,7 @@
 const Notification = require("../models/notification.model");
 const Task = require("../models/task.model");
 const groqService = require("../services/groq.service");
+const smartNotificationService = require("../services/smartNotification.service");
 
 exports.getNotifications = async (req, res, next) => {
   try {
@@ -83,6 +84,24 @@ exports.generateDeadlineNotifications = async (req, res, next) => {
     }
 
     res.json({ notifications });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.generateSmart = async (req, res, next) => {
+  try {
+    const notifications = await smartNotificationService.generateAndSaveSmartNotifications(req.user._id);
+    res.json({ notifications });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getSmart = async (req, res, next) => {
+  try {
+    const result = await smartNotificationService.getSmartNotifications(req.user._id);
+    res.json(result);
   } catch (error) {
     next(error);
   }

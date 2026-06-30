@@ -29,6 +29,8 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/study-plans", require("./routes/studyPlan.routes"));
+app.use("/api/patterns", require("./routes/pattern.routes"));
 
 app.use(errorHandler);
 

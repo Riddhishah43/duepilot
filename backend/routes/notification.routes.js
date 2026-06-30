@@ -6,7 +6,9 @@ router.use(protect);
 
 router.get("/", notificationController.getNotifications);
 router.get("/important", notificationController.getImportantNotifications);
+router.get("/smart", notificationController.getSmart);
 router.post("/generate-deadline", notificationController.generateDeadlineNotifications);
+router.post("/generate-smart", notificationController.generateSmart);
 router.patch("/:id/read", notificationController.markAsRead);
 router.patch("/read-all", notificationController.markAllAsRead);
 

@@ -11,6 +11,9 @@ const navItems = [
   { to: "/ai-coach", label: "AI Coach", icon: "🤖" },
   { to: "/focus", label: "Focus", icon: "⏱️" },
   { to: "/rescue", label: "Rescue", icon: "🚨" },
+  { to: "/notifications", label: "Smart Alerts", icon: "🔔" },
+  { to: "/insights", label: "Insights", icon: "🧠" },
+  { to: "/study-planner", label: "Study Planner", icon: "📚" },
 ];
 
 export default function MainLayout({ children }) {

@@ -9,6 +9,7 @@ const analyticsSchema = new mongoose.Schema(
     missedTasks: { type: Number, default: 0 },
     hoursWorked: { type: Number, default: 0 },
     focusSessions: { type: Number, default: 0 },
+    pendingTasks: { type: Number, default: 0 },
     categoryBreakdown: { type: Map, of: Number, default: {} },
   },
   { timestamps: true }
