@@ -83,7 +83,29 @@ async function getPatternInsights(userId) {
   };
 
   const maxLogs = logs.slice(0, 100);
-  const aiResult = await groqService.analyzePatterns(maxLogs, taskStats);
+  let aiResult;
+  try {
+    aiResult = await groqService.analyzePatterns(maxLogs, taskStats);
+  } catch (err) {
+    const bestCategory = Object.entries(categoryStats).sort((a, b) => b[1].completed - a[1].completed)[0]?.[0] || "general";
+    const worstCategory = Object.entries(categoryStats).sort((a, b) => (a[1].missed / (a[1].total || 1)) - (b[1].missed / (b[1].total || 1)))[0]?.[0] || "general";
+    const bestHour = Object.entries(hourBuckets).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
+    const bestDay = Object.entries(dayBuckets).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
+
+    aiResult = {
+      bestProductiveHour: bestHour,
+      bestProductiveDay: bestDay,
+      strongestCategory: bestCategory,
+      weakestCategory: worstCategory,
+      insightSummary: `You've completed ${completed}/${total} tasks (${completionRate}%). Best category: ${bestCategory}. Most productive at ${bestHour} on ${bestDay}.`,
+      recommendations: [
+        { type: "focus", title: `Start with ${bestCategory} tasks during your peak at ${bestHour}`, detail: "Align your hardest work with your most productive hours." },
+        { type: "improve", title: `Review ${worstCategory} tasks to reduce missed deadlines`, detail: "Break down larger tasks and set earlier internal deadlines." },
+        completed < total ? { type: "catch-up", title: `Focus on completing ${pending} pending tasks`, detail: "Prioritize overdue tasks first using Rescue Mode." } : null,
+        { type: "maintain", title: "Log your work consistently", detail: "More action logs improve future AI insights." },
+      ].filter(Boolean),
+    };
+  }
 
   return {
     analysis: aiResult,

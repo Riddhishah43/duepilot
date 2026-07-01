@@ -21,15 +21,28 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
+function WakeUpScreen() {
+  return (
+    <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center text-center px-4">
+      <div className="w-12 h-12 rounded bg-primary flex items-center justify-center text-white font-bold text-lg mb-4 animate-pulse">DP</div>
+      <h1 className="text-lg font-semibold text-primary mb-2">Waking up DuePilot server...</h1>
+      <p className="text-sm text-text-muted max-w-xs">The server was asleep. This usually takes a few seconds.</p>
+      <div className="mt-6 animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div>
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, wakingUp } = useAuth();
+  if (wakingUp) return <WakeUpScreen />;
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
   if (!user) return <Navigate to="/auth" replace />;
   return children;
 }
 
 function PublicRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, wakingUp } = useAuth();
+  if (wakingUp) return <WakeUpScreen />;
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
   if (user) return <Navigate to="/dashboard" replace />;
   return children;

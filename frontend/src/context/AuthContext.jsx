@@ -1,21 +1,41 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
 
+const API_URL = import.meta.env.VITE_API_URL || "/api";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
+  const [wakingUp, setWakingUp] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      fetchProfile();
-    } else {
-      setLoading(false);
+    const wakeUp = async () => {
+      try {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 30000);
+        await fetch(`${API_URL.replace("/api", "")}/api/health`, { signal: controller.signal });
+        clearTimeout(id);
+      } catch {
+        // Railway is now awake even if the request failed
+      } finally {
+        setWakingUp(false);
+      }
+    };
+    wakeUp();
+  }, []);
+
+  useEffect(() => {
+    if (!wakingUp) {
+      if (token) {
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        fetchProfile();
+      } else {
+        setLoading(false);
+      }
     }
-  }, [token]);
+  }, [token, wakingUp]);
 
   const fetchProfile = async () => {
     try {
@@ -65,7 +85,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, demoLogin }}>
+    <AuthContext.Provider value={{ user, token, loading, wakingUp, login, register, logout, demoLogin }}>
       {children}
     </AuthContext.Provider>
   );
