@@ -75,12 +75,12 @@ export default function Dashboard() {
     <div className="space-y-5">
       <div>
         <h1 className="text-lg font-semibold">Dashboard</h1>
-        <p className="text-sm text-gray-500">Here's your productivity overview</p>
+        <p className="text-sm text-text-muted">Here's your productivity overview</p>
       </div>
 
       {smartNotif && (
         <div
-          className="card border-l-4 border-primary bg-gradient-to-r from-blue-50 to-white cursor-pointer hover:shadow-sm transition-shadow"
+          className="card border-l-4 border-primary bg-gradient-to-r from-primary/5 to-bg-surface cursor-pointer hover:shadow-sm transition-shadow"
           onClick={() => { dismissNotif(smartNotif._id); if (smartNotif.actionUrl) navigate(smartNotif.actionUrl); }}
         >
           <div className="flex items-start gap-3">
@@ -90,9 +90,9 @@ export default function Dashboard() {
                 <h3 className="text-sm font-semibold">{smartNotif.title}</h3>
                 <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
               </div>
-              <p className="text-xs text-gray-600 mt-0.5">{smartNotif.message}</p>
+              <p className="text-xs text-text-muted mt-0.5">{smartNotif.message}</p>
             </div>
-            <button onClick={(e) => { e.stopPropagation(); dismissNotif(smartNotif._id); }} className="text-gray-300 hover:text-gray-500 shrink-0 text-lg">&times;</button>
+            <button onClick={(e) => { e.stopPropagation(); dismissNotif(smartNotif._id); }} className="text-slate-500 hover:text-slate-300 shrink-0 text-lg">&times;</button>
           </div>
         </div>
       )}
@@ -110,14 +110,14 @@ export default function Dashboard() {
           {weeklyChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={weeklyChartData}>
-                <XAxis dataKey="date" stroke="#888" fontSize={12} />
-                <YAxis stroke="#888" fontSize={12} />
-                <Tooltip />
-                <Line type="monotone" dataKey="score" stroke="#9CD5FF" strokeWidth={2} dot={{ r: 3, fill: "#9CD5FF" }} />
-                <Line type="monotone" dataKey="completed" stroke="#355872" strokeWidth={2} dot={{ r: 3, fill: "#355872" }} />
+                <XAxis dataKey="date" stroke="#94A3B8" fontSize={12} />
+                <YAxis stroke="#94A3B8" fontSize={12} />
+                <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
+                <Line type="monotone" dataKey="score" stroke="#8B5CF6" strokeWidth={2} dot={{ r: 3, fill: "#8B5CF6" }} />
+                <Line type="monotone" dataKey="completed" stroke="#34D399" strokeWidth={2} dot={{ r: 3, fill: "#34D399" }} />
               </LineChart>
             </ResponsiveContainer>
-          ) : <p className="text-sm text-gray-400">No data yet this week</p>}
+          ) : <p className="text-sm text-slate-400">No data yet this week</p>}
         </div>
 
         <div>
@@ -130,12 +130,12 @@ export default function Dashboard() {
               data.todayEvents.map((event) => (
                 <div key={event._id} className="card py-2.5 px-3 flex items-center justify-between">
                   <span className="font-medium text-sm">{event.title}</span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-slate-400">
                     {new Date(event.start).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 </div>
               ))
-            ) : <p className="text-sm text-gray-400">No events scheduled today</p>}
+            ) : <p className="text-sm text-slate-400">No events scheduled today</p>}
           </div>
           <div className="mt-3">
             <Link to="/notifications" className="btn-ghost text-xs w-full text-center block">

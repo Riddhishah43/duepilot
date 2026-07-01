@@ -27,18 +27,18 @@ export default function MainLayout({ children }) {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
+    <div className="min-h-screen flex bg-bg-deep">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-56 bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto ${
+        className={`fixed inset-y-0 left-0 z-40 w-56 bg-bg-surface border-r border-default/50 flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-default/50">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold text-sm">DP</div>
             <div>
               <h2 className="font-semibold text-sm text-primary">DuePilot</h2>
-              <p className="text-[11px] text-gray-500">Navigate Every Deadline</p>
+              <p className="text-[11px] text-text-muted">Navigate Every Deadline</p>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@ export default function MainLayout({ children }) {
                 `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                   isActive
                     ? "bg-primary/10 text-primary font-medium"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    : "text-text-muted hover:text-white hover:bg-bg-elevated"
                 }`
               }
             >
@@ -63,40 +63,40 @@ export default function MainLayout({ children }) {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-gray-200">
+        <div className="p-3 border-t border-default/50">
           <div className="flex items-center gap-2 mb-2 px-1">
             <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium">
               {user?.name?.charAt(0) || "U"}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{user?.name || "User"}</p>
-              <p className="text-[11px] text-gray-500 truncate">{user?.email}</p>
+              <p className="text-[11px] text-text-muted truncate">{user?.email}</p>
             </div>
           </div>
           <div className="flex gap-1">
-            <button onClick={() => navigate("/profile")} className="flex-1 text-xs text-gray-600 hover:text-gray-900 px-2 py-1.5 rounded hover:bg-gray-100 transition-colors">Profile</button>
-            <button onClick={handleLogout} className="flex-1 text-xs text-red-500 hover:text-red-700 px-2 py-1.5 rounded hover:bg-red-50 transition-colors">Logout</button>
+            <button onClick={() => navigate("/profile")} className="flex-1 text-xs text-text-muted hover:text-white px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors">Profile</button>
+            <button onClick={handleLogout} className="flex-1 text-xs text-accent hover:text-accent/80 px-2 py-1.5 rounded hover:bg-accent/10 transition-colors">Logout</button>
           </div>
         </div>
       </aside>
 
       {sidebarOpen && (
-        <div className="fixed inset-0 z-30 bg-black/10 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-20 bg-white border-b border-gray-200">
+        <header className="sticky top-0 z-20 bg-bg-surface/80 backdrop-blur-sm border-b border-default/50">
           <div className="flex items-center justify-between px-4 lg:px-6 h-12">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-1.5 rounded hover:bg-gray-100 transition-colors"
+              className="lg:hidden p-1.5 rounded hover:bg-bg-elevated transition-colors"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
               </svg>
             </button>
             <div className="flex items-center gap-2 ml-auto">
-              <button onClick={() => navigate("/focus")} className="text-sm text-gray-600 hover:text-gray-900 px-2 py-1.5 rounded hover:bg-gray-100 transition-colors flex items-center gap-1">
+              <button onClick={() => navigate("/focus")} className="text-sm text-text-muted hover:text-white px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors flex items-center gap-1">
                 <span>⏱️</span>
                 <span className="hidden sm:inline">Focus</span>
               </button>

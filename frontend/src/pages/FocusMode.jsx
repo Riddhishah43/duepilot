@@ -53,7 +53,7 @@ export default function FocusMode() {
     <div className="max-w-md mx-auto space-y-5">
       <div className="text-center">
         <h1 className="text-lg font-semibold">Focus Mode</h1>
-        <p className="text-sm text-gray-500">Stay in the zone</p>
+        <p className="text-sm text-text-muted">Stay in the zone</p>
       </div>
 
       <div className="card text-center">
@@ -64,7 +64,7 @@ export default function FocusMode() {
             { key: "longBreak", label: "Long Break" },
           ].map((m) => (
             <button key={m.key} onClick={() => switchMode(m.key)}
-              className={`px-3 py-1.5 text-sm rounded transition-colors ${mode === m.key ? "bg-primary text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`}>{m.label}</button>
+              className={`px-3 py-1.5 text-sm rounded transition-colors ${mode === m.key ? "bg-primary text-white" : "text-text-muted hover:text-white hover:bg-bg-elevated"}`}>{m.label}</button>
           ))}
         </div>
 
@@ -74,12 +74,12 @@ export default function FocusMode() {
           {!isRunning ? (
             <button onClick={toggleTimer} className="btn-primary">Start</button>
           ) : (
-            <button onClick={toggleTimer} className="bg-yellow-500 text-white px-5 py-2 rounded font-medium hover:bg-yellow-600 transition-colors">Pause</button>
+            <button onClick={toggleTimer} className="bg-warning text-white px-5 py-2 rounded font-medium hover:bg-warning/90 transition-colors">Pause</button>
           )}
           <button onClick={resetTimer} className="btn-ghost">Reset</button>
         </div>
 
-        <p className="text-xs text-gray-400">Sessions: {sessions}</p>
+        <p className="text-xs text-slate-400">Sessions: {sessions}</p>
       </div>
 
       <div className="card">
@@ -90,9 +90,9 @@ export default function FocusMode() {
           {tasks.map((t) => <option key={t._id} value={t._id}>{t.title}</option>)}
         </select>
         {activeTask && (
-          <div className="p-2 rounded bg-priority-high/15 text-sm">
+          <div className="p-2 rounded bg-primary/10 text-sm">
             <p className="font-medium">{activeTask.title}</p>
-            <p className="text-xs text-gray-500">{activeTask.estimatedDuration} min • {activeTask.priority}</p>
+            <p className="text-xs text-text-muted">{activeTask.estimatedDuration} min • {activeTask.priority}</p>
           </div>
         )}
       </div>

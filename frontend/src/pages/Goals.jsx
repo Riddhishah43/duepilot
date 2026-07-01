@@ -37,7 +37,7 @@ export default function Goals() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Goals</h1>
-          <p className="text-sm text-gray-500">Long-term goals with milestones</p>
+          <p className="text-sm text-text-muted">Long-term goals with milestones</p>
         </div>
         <button onClick={() => setShowCreate(true)} className="btn-primary text-sm">+ New Goal</button>
       </div>
@@ -49,11 +49,11 @@ export default function Goals() {
           <textarea className="input-field" placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-gray-600 mb-0.5">Deadline</label>
+              <label className="block text-xs text-text-muted mb-0.5">Deadline</label>
               <input type="date" className="input-field" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} required />
             </div>
             <div>
-              <label className="block text-xs text-gray-600 mb-0.5">Category</label>
+              <label className="block text-xs text-text-muted mb-0.5">Category</label>
               <select className="input-field" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                 <option value="personal">Personal</option>
                 <option value="career">Career</option>
@@ -73,7 +73,7 @@ export default function Goals() {
       {loading ? (
         <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>
       ) : goals.length === 0 ? (
-        <div className="text-center py-10 text-gray-400"><p className="text-3xl mb-2">🎯</p><p className="text-sm">No goals yet</p></div>
+        <div className="text-center py-10 text-slate-400"><p className="text-3xl mb-2">🎯</p><p className="text-sm">No goals yet</p></div>
       ) : (
         <div className="grid md:grid-cols-2 gap-3">
           {goals.map((goal) => (
@@ -81,23 +81,23 @@ export default function Goals() {
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h3 className="font-semibold text-sm">{goal.title}</h3>
-                  <p className="text-xs text-gray-400">{goal.category} • Due {new Date(goal.deadline).toLocaleDateString()}</p>
+                  <p className="text-xs text-slate-400">{goal.category} • Due {new Date(goal.deadline).toLocaleDateString()}</p>
                 </div>
               </div>
               <div className="mb-2">
                 <div className="flex justify-between text-xs mb-0.5"><span>Progress</span><span className="font-medium">{goal.progress}%</span></div>
-                <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-priority-high rounded-full" style={{ width: `${goal.progress}%` }} />
+                <div className="w-full h-1.5 bg-bg-elevated rounded-full overflow-hidden">
+                  <div className="h-full bg-accent rounded-full" style={{ width: `${goal.progress}%` }} />
                 </div>
               </div>
               {goal.milestones?.length > 0 && (
                 <div className="space-y-1">
-                  <p className="text-[11px] font-medium text-gray-500 uppercase">Milestones</p>
+                  <p className="text-[11px] font-medium text-text-muted uppercase">Milestones</p>
                   {goal.milestones.map((m) => (
                     <label key={m._id} className="flex items-center gap-1.5 text-sm cursor-pointer">
                       <input type="checkbox" checked={m.completed} onChange={() => toggleMilestone(goal._id, m._id)}
-                        className="rounded border-gray-300 text-priority-high focus:ring-priority-high" />
-                      <span className={`text-xs ${m.completed ? "line-through text-gray-400" : ""}`}>{m.title}</span>
+                        className="rounded border-default text-accent focus:ring-accent bg-bg-surface" />
+                      <span className={`text-xs ${m.completed ? "line-through text-slate-400" : ""}`}>{m.title}</span>
                     </label>
                   ))}
                 </div>

@@ -80,13 +80,10 @@ async function getOrCreateDailyAnalytics(userId, date) {
   return analytics;
 }
 
-async function getWeeklyAnalytics(userId, endDate) {
-  const startOfRange = new Date(endDate);
-  startOfRange.setDate(startOfRange.getDate() - 7);
-
+async function getAnalyticsInRange(userId, startDate, endDate) {
   return Analytics.find({
     userId,
-    date: { $gte: startOfRange, $lte: endDate },
+    date: { $gte: startDate, $lte: endDate },
   }).sort({ date: 1 });
 }
 
@@ -117,8 +114,8 @@ async function computeAggregates(userId) {
   });
 
   const riskTrend = tasks
-    .filter((t) => t.riskScore > 0)
-    .sort((a, b) => a.deadline - b.deadline)
+    .filter((t) => t.riskScore > 0 && t.deadline)
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
     .slice(0, 20)
     .map((t) => ({
       title: t.title.length > 20 ? t.title.slice(0, 20) + "..." : t.title,
@@ -126,34 +123,20 @@ async function computeAggregates(userId) {
       deadline: t.deadline,
     }));
 
-  let streak = 0;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const ana = await Analytics.findOne({ userId, date: d });
-    if (ana && ana.productivityScore >= 50) {
-      streak++;
-    } else {
-      break;
-    }
-  }
-
   const now = new Date();
   const weekAgo = new Date(now);
   weekAgo.setDate(weekAgo.getDate() - 7);
   const weekTasks = tasks.filter((t) => t.completedAt && new Date(t.completedAt) >= weekAgo);
   const hoursByDay = {};
-  for (let i = 0; i < 7; i++) {
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  for (let i = 6; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    const key = d.toLocaleDateString("en-US", { weekday: "short" });
-    hoursByDay[key] = 0;
+    hoursByDay[dayNames[d.getDay()]] = 0;
   }
   weekTasks.forEach((t) => {
     if (t.completedAt && t.estimatedDuration) {
-      const key = new Date(t.completedAt).toLocaleDateString("en-US", { weekday: "short" });
+      const key = dayNames[new Date(t.completedAt).getDay()];
       if (hoursByDay[key] !== undefined) {
         hoursByDay[key] += t.estimatedDuration / 60;
       }
@@ -171,10 +154,33 @@ async function computeAggregates(userId) {
     priorityDist,
     categoryData,
     riskTrend,
-    streak,
     hoursByDay,
     bestDay: bestDay ? { day: bestDay[0], hours: Math.round(bestDay[1] * 10) / 10 } : null,
   };
 }
 
-module.exports = { calculateDailyScore, getOrCreateDailyAnalytics, getWeeklyAnalytics, computeAggregates };
+async function computeStreak(userId) {
+  const records = await Analytics.find(
+    { userId, productivityScore: { $gte: 50 } },
+    { date: 1, _id: 0 }
+  ).sort({ date: -1 }).limit(365);
+
+  if (records.length === 0) return 0;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let streak = 0;
+  for (let i = 0; i < records.length; i++) {
+    const expected = new Date(today);
+    expected.setDate(expected.getDate() - i);
+    const recordDate = new Date(records[i].date);
+    if (recordDate.toDateString() === expected.toDateString()) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+module.exports = { calculateDailyScore, getOrCreateDailyAnalytics, getAnalyticsInRange, computeAggregates, computeStreak };

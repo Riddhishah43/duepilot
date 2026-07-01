@@ -14,7 +14,10 @@ exports.getTasks = async (req, res, next) => {
     if (category) filter.category = category;
     if (archived === "true") filter.isArchived = true;
     else filter.isArchived = { $ne: true };
-    if (search) filter.title = { $regex: search, $options: "i" };
+    if (search) {
+      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      filter.title = { $regex: escaped, $options: "i" };
+    }
 
     const tasks = await Task.find(filter).sort({ deadline: 1, priority: -1 });
     res.json({ tasks });
@@ -73,18 +76,20 @@ exports.createTask = async (req, res, next) => {
       }
     }
 
-    try {
-      const priorityResult = await groqService.predictPriority({
-        title: task.title,
-        deadline: task.deadline,
-        estimatedDuration: task.estimatedDuration,
-      });
-      if (priorityResult.priority) {
-        task.priority = priorityResult.priority;
-        await task.save();
+    if (!req.body.priority) {
+      try {
+        const priorityResult = await groqService.predictPriority({
+          title: task.title,
+          deadline: task.deadline,
+          estimatedDuration: task.estimatedDuration,
+        });
+        if (priorityResult.priority) {
+          task.priority = priorityResult.priority;
+          await task.save();
+        }
+      } catch (aiError) {
+        console.error("AI priority prediction failed:", aiError.message);
       }
-    } catch (aiError) {
-      console.error("AI priority prediction failed:", aiError.message);
     }
 
     logAction(req.user._id, "task_created", task);
@@ -97,25 +102,28 @@ exports.createTask = async (req, res, next) => {
 
 exports.updateTask = async (req, res, next) => {
   try {
+    const existingTask = await Task.findOne({ _id: req.params.id, userId: req.user._id });
+    if (!existingTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    const hadDeadlineChange = req.body.deadline && req.body.deadline !== existingTask.deadline?.toISOString()?.split("T")[0];
+
     const task = await Task.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
       { ...req.body },
       { new: true, runValidators: true }
     );
 
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-
-    if (req.body.status === "completed") {
+    if (req.body.status === "completed" && existingTask.status !== "completed") {
       task.completedAt = new Date();
       task.progress = 100;
       await task.save();
       logAction(req.user._id, "task_completed", task);
-    } else if (req.body.status === "missed") {
+    } else if (req.body.status === "missed" && existingTask.status !== "missed") {
       logAction(req.user._id, "task_missed", task);
-    } else if (req.body.deadline && req.body.deadline !== task.deadline?.toISOString()) {
-      logAction(req.user._id, "task_rescheduled", task, { prevDeadline: task.deadline });
+    } else if (hadDeadlineChange) {
+      logAction(req.user._id, "task_rescheduled", task, { prevDeadline: existingTask.deadline });
     } else {
       logAction(req.user._id, "task_updated", task);
     }

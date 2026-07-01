@@ -30,13 +30,13 @@ export default function Auth() {
 
   return (
     <div>
-      <div className="flex bg-gray-100 rounded-md p-0.5 mb-5">
+      <div className="flex bg-bg-elevated rounded-md p-0.5 mb-5">
         {["login", "register"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 py-1.5 rounded text-sm font-medium transition-colors ${
-              tab === t ? "bg-white text-primary border border-gray-200" : "text-gray-500"
+              tab === t ? "bg-bg-surface text-primary border border-default/50" : "text-text-muted"
             }`}
           >
             {t === "login" ? "Sign In" : "Sign Up"}
@@ -47,16 +47,16 @@ export default function Auth() {
       <form onSubmit={handleSubmit} className="space-y-3">
         {tab === "register" && (
           <div>
-            <label className="block text-sm text-gray-700 mb-1">Name</label>
+            <label className="block text-sm text-text-muted mb-1">Name</label>
             <input type="text" className="input-field" placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           </div>
         )}
         <div>
-          <label className="block text-sm text-gray-700 mb-1">Email</label>
+          <label className="block text-sm text-text-muted mb-1">Email</label>
           <input type="email" className="input-field" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         </div>
         <div>
-          <label className="block text-sm text-gray-700 mb-1">Password</label>
+          <label className="block text-sm text-text-muted mb-1">Password</label>
           <input type="password" className="input-field" placeholder="At least 6 characters" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={6} />
         </div>
         <button type="submit" disabled={loading} className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-60">

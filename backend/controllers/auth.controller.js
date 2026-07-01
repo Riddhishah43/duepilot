@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const User = require("../models/user.model");
+const { sendPasswordResetEmail } = require("../services/email.service");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
@@ -67,6 +68,60 @@ exports.login = async (req, res, next) => {
 exports.getProfile = async (req, res, next) => {
   try {
     res.json({ user: req.user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "No account with that email" });
+    }
+    const resetToken = jwt.sign({ id: user._id, purpose: "reset" }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    await sendPasswordResetEmail(user.email, resetToken);
+    res.json({ message: "Password reset link sent to your email" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.purpose !== "reset") {
+      return res.status(400).json({ message: "Invalid reset token" });
+    }
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.password = password;
+    await user.save();
+    res.json({ message: "Password reset successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteAccount = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    await Promise.all([
+      require("../models/task.model").deleteMany({ userId }),
+      require("../models/subtask.model").deleteMany({}),
+      require("../models/goal.model").deleteMany({ userId }),
+      require("../models/analytics.model").deleteMany({ userId }),
+      require("../models/notification.model").deleteMany({ userId }),
+      require("../models/calendarEvent.model").deleteMany({ userId }),
+      require("../models/actionLog.model").deleteMany({ userId }),
+      require("../models/studyPlan.model").deleteMany({ userId }),
+      User.findByIdAndDelete(userId),
+    ]);
+    res.json({ message: "Account deleted successfully" });
   } catch (error) {
     next(error);
   }

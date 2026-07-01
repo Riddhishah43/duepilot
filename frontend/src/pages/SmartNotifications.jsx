@@ -4,16 +4,16 @@ import toast from "react-hot-toast";
 import api from "../services/api";
 
 const subtypeMeta = {
-  start_now: { emoji: "⏰", label: "Start Now", color: "bg-blue-50 border-blue-200" },
-  best_time: { emoji: "🌟", label: "Best Time", color: "bg-yellow-50 border-yellow-200" },
-  rescue: { emoji: "🚨", label: "Rescue", color: "bg-red-50 border-red-200" },
-  focus: { emoji: "🎯", label: "Focus", color: "bg-green-50 border-green-200" },
-  habit: { emoji: "🔥", label: "Streak", color: "bg-orange-50 border-orange-200" },
-  overload: { emoji: "⚠️", label: "Overload", color: "bg-red-50 border-red-200" },
-  missed: { emoji: "📋", label: "Missed", color: "bg-purple-50 border-purple-200" },
-  break: { emoji: "☕", label: "Break", color: "bg-teal-50 border-teal-200" },
-  prediction: { emoji: "🔮", label: "Prediction", color: "bg-indigo-50 border-indigo-200" },
-  reinforcement: { emoji: "🎉", label: "Great Work", color: "bg-green-50 border-green-200" },
+  start_now: { emoji: "⏰", label: "Start Now", color: "bg-primary/10 border-primary/20" },
+  best_time: { emoji: "🌟", label: "Best Time", color: "bg-warning/10 border-warning/20" },
+  rescue: { emoji: "🚨", label: "Rescue", color: "bg-accent/10 border-accent/20" },
+  focus: { emoji: "🎯", label: "Focus", color: "bg-success/10 border-success/20" },
+  habit: { emoji: "🔥", label: "Streak", color: "bg-orange-500/10 border-orange-500/20" },
+  overload: { emoji: "⚠️", label: "Overload", color: "bg-accent/10 border-accent/20" },
+  missed: { emoji: "📋", label: "Missed", color: "bg-primary/10 border-primary/20" },
+  break: { emoji: "☕", label: "Break", color: "bg-teal-500/10 border-teal-500/20" },
+  prediction: { emoji: "🔮", label: "Prediction", color: "bg-indigo-500/10 border-indigo-500/20" },
+  reinforcement: { emoji: "🎉", label: "Great Work", color: "bg-success/10 border-success/20" },
 };
 
 export default function SmartNotifications() {
@@ -38,8 +38,11 @@ export default function SmartNotifications() {
   const generateNow = async () => {
     setGenerating(true);
     try {
-      await api.post("/notifications/generate-smart");
-      toast.success("AI analyzed your tasks!");
+      const { data } = await api.post("/notifications/generate-smart");
+      const count = (data.notifications || []).length;
+      if (count > 0) {
+        toast.success(`Generated ${count} smart notification${count !== 1 ? "s" : ""}`);
+      }
       loadNotifications();
     } catch {
       toast.error("Failed to generate insights");
@@ -79,7 +82,7 @@ export default function SmartNotifications() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Smart AI Notifications</h1>
-          <p className="text-sm text-gray-500">Context-aware reminders that help you act</p>
+          <p className="text-sm text-text-muted">Context-aware reminders that help you act</p>
         </div>
         <div className="flex gap-2">
           <button onClick={markAllRead} className="btn-ghost text-xs">Mark All Read</button>
@@ -97,7 +100,7 @@ export default function SmartNotifications() {
         <div className="card text-center py-12">
           <p className="text-3xl mb-2">🤖</p>
           <p className="font-semibold text-sm">No smart notifications yet</p>
-          <p className="text-xs text-gray-400 mt-1 mb-4">
+          <p className="text-xs text-slate-400 mt-1 mb-4">
             Click "Generate Now" to get AI-powered personalized reminders
           </p>
           <button onClick={generateNow} disabled={generating} className="btn-primary text-sm">
@@ -107,7 +110,7 @@ export default function SmartNotifications() {
       ) : (
         <div className="space-y-2">
           {notifications.map((n) => {
-            const meta = subtypeMeta[n.subtype] || { emoji: "💡", label: n.subtype, color: "bg-gray-50 border-gray-200" };
+            const meta = subtypeMeta[n.subtype] || { emoji: "💡", label: n.subtype, color: "bg-bg-elevated border-default/50" };
             return (
               <div
                 key={n._id}
@@ -119,12 +122,12 @@ export default function SmartNotifications() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="text-sm font-semibold">{n.title}</h3>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/70 text-gray-500 border">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-bg-elevated text-text-muted border border-default/50">
                         {meta.label}
                       </span>
                       {!n.read && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
                     </div>
-                    <p className="text-xs text-gray-600">{n.message}</p>
+                    <p className="text-xs text-text-muted">{n.message}</p>
                     {n.actionUrl && (
                       <p className="text-[11px] text-primary font-medium mt-1">
                         {n.actionUrl === "/focus" ? "Start Focus Session →" :
@@ -138,7 +141,7 @@ export default function SmartNotifications() {
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); markRead(n._id); }}
-                    className="text-gray-300 hover:text-gray-500 text-lg shrink-0"
+                    className="text-slate-500 hover:text-slate-300 text-lg shrink-0"
                   >
                     ×
                   </button>

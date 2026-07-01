@@ -9,6 +9,9 @@ exports.getDashboardStats = async (req, res, next) => {
     const endOfToday = new Date(today);
     endOfToday.setHours(23, 59, 59, 999);
 
+    const weekAgo = new Date(endOfToday);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
     const [
       todayTasks,
       upcomingDeadlines,
@@ -23,7 +26,7 @@ exports.getDashboardStats = async (req, res, next) => {
       Task.find({ userId: req.user._id, riskScore: { $gte: 70 }, status: { $in: ["pending", "in-progress"] } })
         .sort({ riskScore: -1 })
         .limit(5),
-      analyticsService.getWeeklyAnalytics(req.user._id, endOfToday),
+      analyticsService.getAnalyticsInRange(req.user._id, weekAgo, endOfToday),
       CalendarEvent.find({ userId: req.user._id, start: { $gte: today, $lte: endOfToday } }).sort({ start: 1 }),
     ]);
 
@@ -46,14 +49,17 @@ exports.getAnalytics = async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
     const end = endDate ? new Date(endDate) : new Date();
+    end.setHours(23, 59, 59, 999);
     const start = startDate ? new Date(startDate) : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+    start.setHours(0, 0, 0, 0);
 
-    const [dailyAnalytics, aggregates] = await Promise.all([
-      analyticsService.getWeeklyAnalytics(req.user._id, end),
+    const [dailyAnalytics, aggregates, streak] = await Promise.all([
+      analyticsService.getAnalyticsInRange(req.user._id, start, end),
       analyticsService.computeAggregates(req.user._id),
+      analyticsService.computeStreak(req.user._id),
     ]);
 
-    res.json({ ...aggregates, dailyAnalytics });
+    res.json({ ...aggregates, dailyAnalytics, streak });
   } catch (error) {
     next(error);
   }

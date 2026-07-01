@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Landing from "./pages/Landing";
@@ -22,22 +23,23 @@ import NotFound from "./pages/NotFound";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
+  if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
   if (!user) return <Navigate to="/auth" replace />;
   return children;
 }
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
+  if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
   if (user) return <Navigate to="/dashboard" replace />;
   return children;
 }
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
-      <Toaster position="top-right" toastOptions={{ style: { background: "#fff", color: "#333", border: "1px solid #e5e7eb", borderRadius: "8px" }, duration: 4000 }} />
+      <Toaster position="top-right" toastOptions={{ style: { background: "#2A3242", color: "#F8FAFC", border: "1px solid #475569", borderRadius: "18px" }, duration: 4000 }} />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<PublicRoute><AuthLayout><Auth /></AuthLayout></PublicRoute>} />
@@ -57,6 +59,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
