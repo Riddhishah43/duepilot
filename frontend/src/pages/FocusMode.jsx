@@ -64,7 +64,7 @@ export default function FocusMode() {
             { key: "longBreak", label: "Long Break" },
           ].map((m) => (
             <button key={m.key} onClick={() => switchMode(m.key)}
-              className={`px-3 py-1.5 text-sm rounded transition-colors ${mode === m.key ? "bg-primary text-white" : "text-text-muted hover:text-white hover:bg-bg-elevated"}`}>{m.label}</button>
+              className={`px-3 py-1.5 text-sm rounded transition-colors ${mode === m.key ? "bg-primary text-white" : "text-text-muted hover:text-text-main hover:bg-bg-elevated"}`}>{m.label}</button>
           ))}
         </div>
 

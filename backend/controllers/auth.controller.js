@@ -107,6 +107,20 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
+exports.demoLogin = async (req, res, next) => {
+  try {
+    const User = require("../models/user.model");
+    const user = await User.findOne({ email: "googledev@duepilot.com" });
+    if (!user) {
+      return res.status(404).json({ message: "Demo account not found. Run seed script first." });
+    }
+    const token = generateToken(user._id);
+    res.json({ message: "Demo login successful", token, user });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.deleteAccount = async (req, res, next) => {
   try {
     const userId = req.user._id;

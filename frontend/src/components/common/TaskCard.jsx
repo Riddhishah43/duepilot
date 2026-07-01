@@ -1,20 +1,29 @@
 const priorityStyles = {
-  high: "border-l-accent",
-  medium: "border-l-warning",
-  low: "border-l-success",
+  critical: "border-l-[#6366F1] shadow-[inset_0_0_6px_-2px_#6366F1]",
+  high: "border-l-[#FF5A76] shadow-[inset_0_0_6px_-2px_#FF5A76]",
+  medium: "border-l-[#FBBF24] shadow-[inset_0_0_6px_-2px_#FBBF24]",
+  low: "border-l-[#34D399] shadow-[inset_0_0_6px_-2px_#34D399]",
+};
+
+const priorityIcons = {
+  critical: "🔵",
+  high: "🔥",
+  medium: "⚡",
+  low: "🌱",
 };
 
 const priorityBadge = {
-  high: "badge-high",
-  medium: "badge-medium",
-  low: "badge-low",
+  critical: "bg-[#312E81] border-[#6366F1] text-[#C7D2FE]",
+  high: "bg-[#7F1D1D] border-[#EF4444] text-[#FECACA]",
+  medium: "bg-[#78350F] border-[#F59E0B] text-[#FDE68A]",
+  low: "bg-[#14532D] border-[#22C55E] text-[#BBF7D0]",
 };
 
 const statusBadge = {
-  pending: "badge-low",
-  "in-progress": "badge-medium",
-  completed: "badge-high",
-  missed: "badge-high",
+  pending: "bg-bg-elevated text-text-muted border border-border-default/50",
+  "in-progress": "bg-[#1E3A5F] border-[#3B82F6] text-[#93C5FD]",
+  completed: "bg-[#14532D] border-[#22C55E] text-[#BBF7D0]",
+  missed: "bg-[#7F1D1D] border-[#EF4444] text-[#FECACA]",
 };
 
 const categoryColors = [
@@ -42,7 +51,7 @@ export default function TaskCard({ task, onClick }) {
   return (
     <div
       onClick={() => onClick?.(task)}
-      className={`bg-bg-surface rounded-lg border border-default/50 border-l-4 p-3.5 cursor-pointer transition-colors hover:border-default ${priorityStyles[task.priority] || priorityStyles.medium}`}
+      className={`bg-bg-surface rounded-lg border border-border-default/30 border-l-[5px] p-3.5 cursor-pointer transition-all hover:bg-bg-elevated hover:border-border-default/60 ${priorityStyles[task.priority] || priorityStyles.medium}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
@@ -51,10 +60,10 @@ export default function TaskCard({ task, onClick }) {
             <p className="text-xs text-text-muted mt-0.5 line-clamp-2">{task.description}</p>
           )}
           <div className="flex flex-wrap items-center gap-1.5 mt-2">
-            <span className={`px-2 py-0.5 text-[11px] font-medium rounded ${priorityBadge[task.priority] || priorityBadge.medium}`}>
-              {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : "Medium"}
+            <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${priorityBadge[task.priority] || priorityBadge.medium}`}>
+              {priorityIcons[task.priority] || "⚡"} {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : "Medium"}
             </span>
-            <span className={statusBadge[task.status] || statusBadge.pending}>{task.status}</span>
+            <span className={`px-2.5 py-1 text-[11px] font-medium rounded-full ${statusBadge[task.status] || statusBadge.pending}`}>{task.status}</span>
             {task.category && (
               <span className={`px-2 py-0.5 text-[11px] font-medium rounded ${catColor.bg} ${catColor.text}`}>{task.category}</span>
             )}

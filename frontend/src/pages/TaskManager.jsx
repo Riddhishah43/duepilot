@@ -64,7 +64,7 @@ export default function TaskManager() {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1 text-sm rounded transition-colors ${
-              filter === f ? "bg-primary text-white" : "text-text-muted hover:text-white hover:bg-bg-elevated"
+              filter === f ? "bg-primary text-white" : "text-text-muted hover:text-text-main hover:bg-bg-elevated"
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -86,9 +86,10 @@ export default function TaskManager() {
             <input type="number" className="input-field" min={5} max={1440} value={form.estimatedDuration} onChange={(e) => setForm({ ...form, estimatedDuration: parseInt(e.target.value) || 60 })} required />
           </div>
           <select className="input-field" value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
-            <option value="low">Low Priority</option>
-            <option value="medium">Medium Priority</option>
-            <option value="high">High Priority</option>
+            <option value="low">🌱 Low Priority</option>
+            <option value="medium">⚡ Medium Priority</option>
+            <option value="high">🔥 High Priority</option>
+            <option value="critical">🔵 Critical Priority</option>
           </select>
           <div className="flex gap-2">
             <button type="submit" className="btn-primary text-sm">Create Task</button>

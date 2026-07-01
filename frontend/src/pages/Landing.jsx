@@ -9,7 +9,7 @@ export default function Landing() {
           <span className="font-semibold text-sm">DuePilot AI</span>
         </div>
         <div className="flex gap-2">
-          <Link to="/auth" className="text-sm text-text-muted hover:text-white px-3 py-1.5 rounded hover:bg-bg-elevated transition-colors">Log In</Link>
+          <Link to="/auth" className="text-sm text-text-muted hover:text-text-main px-3 py-1.5 rounded hover:bg-bg-elevated transition-colors">Log In</Link>
           <Link to="/auth?tab=register" className="btn-primary text-sm">Get Started</Link>
         </div>
       </header>

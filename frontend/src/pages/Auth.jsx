@@ -8,7 +8,7 @@ export default function Auth() {
   const [tab, setTab] = useState(searchParams.get("tab") || "login");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { login, register } = useAuth();
+  const { login, register, demoLogin } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +23,18 @@ export default function Auth() {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    try {
+      await demoLogin();
+      toast.success("Welcome to DuePilot AI!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Demo account unavailable");
     } finally {
       setLoading(false);
     }
@@ -64,6 +76,19 @@ export default function Auth() {
           {tab === "login" ? "Sign In" : "Create Account"}
         </button>
       </form>
+
+      <div className="relative my-4">
+        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-default/50"></div></div>
+        <div className="relative flex justify-center text-xs"><span className="px-2 bg-bg-surface text-text-muted">or</span></div>
+      </div>
+
+      <button onClick={handleDemoLogin} disabled={loading} className="w-full px-4 py-2 rounded-md font-medium text-sm border border-border-default/50 text-text-muted hover:text-text-main hover:bg-bg-elevated transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+        {loading ? (
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+        ) : (
+          "🚀 Try Demo Account"
+        )}
+      </button>
     </div>
   );
 }

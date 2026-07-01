@@ -30,6 +30,15 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const demoLogin = async () => {
+    const { data } = await api.post("/auth/demo-login");
+    localStorage.setItem("token", data.token);
+    api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+    setToken(data.token);
+    setUser(data.user);
+    return data;
+  };
+
   const login = async (email, password) => {
     const { data } = await api.post("/auth/login", { email, password });
     localStorage.setItem("token", data.token);
@@ -56,7 +65,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, demoLogin }}>
       {children}
     </AuthContext.Provider>
   );

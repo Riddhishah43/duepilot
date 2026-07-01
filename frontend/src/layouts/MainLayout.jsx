@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: "📊" },
@@ -19,6 +20,7 @@ const navItems = [
 export default function MainLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -53,7 +55,7 @@ export default function MainLayout({ children }) {
                 `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                   isActive
                     ? "bg-primary/10 text-primary font-medium"
-                    : "text-text-muted hover:text-white hover:bg-bg-elevated"
+                    : "text-text-muted hover:text-text-main hover:bg-bg-elevated"
                 }`
               }
             >
@@ -74,7 +76,7 @@ export default function MainLayout({ children }) {
             </div>
           </div>
           <div className="flex gap-1">
-            <button onClick={() => navigate("/profile")} className="flex-1 text-xs text-text-muted hover:text-white px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors">Profile</button>
+            <button onClick={() => navigate("/profile")} className="flex-1 text-xs text-text-muted hover:text-text-main px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors">Profile</button>
             <button onClick={handleLogout} className="flex-1 text-xs text-accent hover:text-accent/80 px-2 py-1.5 rounded hover:bg-accent/10 transition-colors">Logout</button>
           </div>
         </div>
@@ -96,7 +98,10 @@ export default function MainLayout({ children }) {
               </svg>
             </button>
             <div className="flex items-center gap-2 ml-auto">
-              <button onClick={() => navigate("/focus")} className="text-sm text-text-muted hover:text-white px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors flex items-center gap-1">
+              <button onClick={toggleTheme} className="text-sm text-text-muted hover:text-text-main px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors" title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>
+                {theme === "dark" ? "☀️" : "🌙"}
+              </button>
+              <button onClick={() => navigate("/focus")} className="text-sm text-text-muted hover:text-text-main px-2 py-1.5 rounded hover:bg-bg-elevated transition-colors flex items-center gap-1">
                 <span>⏱️</span>
                 <span className="hidden sm:inline">Focus</span>
               </button>
