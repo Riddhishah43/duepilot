@@ -33,6 +33,12 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 
 ## Features
 
+### 🚀 Demo Account
+
+- One-click **"Try Demo Account"** login — instantly explore all features without signing up
+- Pre-seeded with 30 tasks (all priorities & statuses), 5 goals, 30 days of analytics, study plan, calendar events, and notifications
+- Demo user: **Google Developer** (googledev@duepilot.com)
+
 ### 🤖 AI-Powered Intelligence
 
 | Feature | Description |
@@ -42,30 +48,32 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 | **Risk Analysis** | Analyzes tasks against deadlines to detect at-risk items before they're missed |
 | **Smart Scheduling** | Generates optimized daily schedules based on priorities and available time slots |
 | **Daily & Weekly Reports** | AI coach generates personalized productivity reports with scores, trends, and suggestions |
-| **Holistic Rescue Mode** | Emergency intervention analyzing ALL pending tasks — generates a focused rescue plan prioritizing the most critical deadlines |
+| **Holistic Rescue Mode** | Emergency intervention analyzing ALL pending tasks — generates a focused rescue plan prioritizing the most critical deadlines (with AI fallback when rate-limited) |
 | **Goal Milestone Planning** | Long-term goals get AI-suggested milestones to keep you on track |
 | **AI Study Planner** | Generates optimized study/task plans with time blocks, breaks, and smart scheduling |
 | **Pattern Insights** | Detects behavioral patterns (procrastination, peak hours, bottlenecks) from granular action logs |
-| **Smart Notifications** | Groq-generated context-aware notifications with 5 subtypes (deadline, encouragement, milestone, tip, warning) |
+| **Smart Notifications** | Groq-generated context-aware notifications with 10 subtypes (start_now, best_time, rescue, focus, habit, overload, missed, break, prediction, reinforcement) |
 | **Smart Reminders** | Context-aware reminders generated based on task status and deadlines |
 
 ### 📋 Task Management
 
 - Full CRUD with real-time status updates
 - Filter by status (all, pending, in-progress, completed)
-- Priority tags with color-coded badges
+- Priorities with icons (🔥 High, ⚡ Medium, 🌱 Low, 🔵 Critical) and refined color-coded badges
+- Left-border color glow for instant priority recognition
 - Risk scoring on each task card
 - Inline progress tracking
 - **Targets** — set personal deadlines earlier than the actual due date
 
 ### 📊 Analytics & Insights
 
-- Weekly productivity trends (Recharts line chart)
-- Category breakdown (pie chart)
-- Tasks by category (bar chart)
-- Priority distribution chart
-- Risk trend over time (line chart)
-- Completion rate, focus hours, streak tracking, and daily scores
+- Weekly productivity trends (Area chart)
+- Completion by priority (Bar chart)
+- Daily task breakdown (Stacked bar chart)
+- Category breakdown with progress bars
+- Focus hours per day (Bar chart)
+- Risk Overview with color-coded risk bars
+- Completion rate, streak tracking, best day highlight
 
 ### 🎯 Goal Tracking
 
@@ -78,6 +86,13 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 - Built-in Pomodoro timer with configurable durations
 - Focus / Break / Long Break cycles
 - Session counter and task selection
+
+### 🎨 Theme Toggle
+
+- **Light/Dark mode toggle** (🌙/☀️) in the app header
+- Light mode: clean light gray background with dark cards
+- Dark mode: original deep dark theme
+- Persisted to localStorage across sessions
 
 ### 🔐 Authentication & Security
 
@@ -258,6 +273,7 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 |--------|----------|-------------|------|
 | `POST` | `/api/auth/register` | Create new account | No |
 | `POST` | `/api/auth/login` | Sign in | No |
+| `POST` | `/api/auth/demo-login` | Instant demo account login | No |
 | `GET` | `/api/auth/profile` | Get current user | Yes |
 | `PUT` | `/api/auth/profile` | Update profile | Yes |
 
