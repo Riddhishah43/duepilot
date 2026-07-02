@@ -9,7 +9,7 @@ router.get("/important", notificationController.getImportantNotifications);
 router.get("/smart", notificationController.getSmart);
 router.post("/generate-deadline", notificationController.generateDeadlineNotifications);
 router.post("/generate-smart", notificationController.generateSmart);
-router.patch("/:id/read", notificationController.markAsRead);
 router.patch("/read-all", notificationController.markAllAsRead);
+router.patch("/:id/read", notificationController.markAsRead);
 
 module.exports = router;

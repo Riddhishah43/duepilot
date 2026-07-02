@@ -8,7 +8,7 @@ const taskSchema = new mongoose.Schema(
     deadline: { type: Date, required: true },
     targetDeadline: { type: Date },
     estimatedDuration: { type: Number, default: 60 },
-    priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
+    priority: { type: String, enum: ["low", "medium", "high", "critical"], default: "medium" },
     category: { type: String, default: "general" },
     tags: [{ type: String, trim: true }],
     progress: { type: Number, default: 0, min: 0, max: 100 },

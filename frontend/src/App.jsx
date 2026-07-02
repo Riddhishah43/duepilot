@@ -11,7 +11,7 @@ import TaskManager from "./pages/TaskManager";
 import StudyPlanner from "./pages/StudyPlanner";
 import PatternInsights from "./pages/PatternInsights";
 import SmartNotifications from "./pages/SmartNotifications";
-
+import Goals from "./pages/Goals";
 import Targets from "./pages/Targets";
 import Analytics from "./pages/Analytics";
 import AICoach from "./pages/AICoach";
@@ -20,14 +20,19 @@ import RescueMode from "./pages/RescueMode";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 function WakeUpScreen() {
   return (
-    <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center text-center px-4">
-      <div className="w-12 h-12 rounded bg-primary flex items-center justify-center text-white font-bold text-lg mb-4 animate-pulse">DP</div>
-      <h1 className="text-lg font-semibold text-primary mb-2">Waking up DuePilot server...</h1>
-      <p className="text-sm text-text-muted max-w-xs">The server was asleep. This usually takes a few seconds.</p>
-      <div className="mt-6 animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div>
+    <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center text-center px-4">
+      <div className="glass-card-static w-16 h-16 flex items-center justify-center text-2xl font-bold mb-6 text-gradient glow-accent">
+        DP
+      </div>
+      <h1 className="text-xl font-bold text-[#F1F5F9] mb-3">Waking up DuePilot server...</h1>
+      <p className="text-sm text-[#64748B] max-w-sm mb-6">
+        The server was asleep. This usually takes a few seconds.
+      </p>
+      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
     </div>
   );
 }
@@ -35,40 +40,61 @@ function WakeUpScreen() {
 function ProtectedRoute({ children }) {
   const { user, loading, wakingUp } = useAuth();
   if (wakingUp) return <WakeUpScreen />;
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-[#07111F]">
+      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
+    </div>
+  );
   if (!user) return <Navigate to="/auth" replace />;
-  return children;
+  return <div className="page-enter">{children}</div>;
 }
 
 function PublicRoute({ children }) {
   const { user, loading, wakingUp } = useAuth();
   if (wakingUp) return <WakeUpScreen />;
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-bg-deep"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-[#07111F]">
+      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
+    </div>
+  );
   if (user) return <Navigate to="/dashboard" replace />;
-  return children;
+  return <div className="page-enter">{children}</div>;
 }
 
 function App() {
   return (
     <ThemeProvider>
     <AuthProvider>
-      <Toaster position="top-right" toastOptions={{ style: { background: "#2A3242", color: "#F8FAFC", border: "1px solid #475569", borderRadius: "18px" }, duration: 4000 }} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "rgba(15,23,42,0.8)",
+            backdropFilter: "blur(30px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "18px",
+            color: "#F1F5F9",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+          },
+          duration: 4000,
+        }}
+      />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<PublicRoute><AuthLayout><Auth /></AuthLayout></PublicRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
-        <Route path="/tasks" element={<ProtectedRoute><MainLayout><TaskManager /></MainLayout></ProtectedRoute>} />
-
-        <Route path="/targets" element={<ProtectedRoute><MainLayout><Targets /></MainLayout></ProtectedRoute>} />
-        <Route path="/analytics" element={<ProtectedRoute><MainLayout><Analytics /></MainLayout></ProtectedRoute>} />
-        <Route path="/ai-coach" element={<ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute>} />
-        <Route path="/focus" element={<ProtectedRoute><MainLayout><FocusMode /></MainLayout></ProtectedRoute>} />
-        <Route path="/rescue" element={<ProtectedRoute><MainLayout><RescueMode /></MainLayout></ProtectedRoute>} />
-        <Route path="/study-planner" element={<ProtectedRoute><MainLayout><StudyPlanner /></MainLayout></ProtectedRoute>} />
-        <Route path="/insights" element={<ProtectedRoute><MainLayout><PatternInsights /></MainLayout></ProtectedRoute>} />
-        <Route path="/notifications" element={<ProtectedRoute><MainLayout><SmartNotifications /></MainLayout></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ErrorBoundary><ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/tasks" element={<ErrorBoundary><ProtectedRoute><MainLayout><TaskManager /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/goals" element={<ErrorBoundary><ProtectedRoute><MainLayout><Goals /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/targets" element={<ErrorBoundary><ProtectedRoute><MainLayout><Targets /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/analytics" element={<ErrorBoundary><ProtectedRoute><MainLayout><Analytics /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/ai-coach" element={<ErrorBoundary><ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/focus" element={<ErrorBoundary><ProtectedRoute><MainLayout><FocusMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/rescue" element={<ErrorBoundary><ProtectedRoute><MainLayout><RescueMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/study-planner" element={<ErrorBoundary><ProtectedRoute><MainLayout><StudyPlanner /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/insights" element={<ErrorBoundary><ProtectedRoute><MainLayout><PatternInsights /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/notifications" element={<ErrorBoundary><ProtectedRoute><MainLayout><SmartNotifications /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/profile" element={<ErrorBoundary><ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+        <Route path="/settings" element={<ErrorBoundary><ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute></ErrorBoundary>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>

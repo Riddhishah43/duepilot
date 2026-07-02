@@ -2,48 +2,121 @@ import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-bg-deep text-text-main">
-      <header className="px-6 py-3 flex items-center justify-between border-b border-default/50">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold text-sm">DP</div>
-          <span className="font-semibold text-sm">DuePilot AI</span>
+    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Nav */}
+      <header className="px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
+            style={{ background: "var(--accent-gradient)" }}
+          >
+            DP
+          </div>
+          <span className="font-bold text-lg" style={{ color: "var(--text-primary)" }}>DuePilot</span>
         </div>
         <div className="flex gap-2">
-          <Link to="/auth" className="text-sm text-text-muted hover:text-text-main px-3 py-1.5 rounded hover:bg-bg-elevated transition-colors">Log In</Link>
-          <Link to="/auth?tab=register" className="btn-primary text-sm">Get Started</Link>
+          <Link
+            to="/auth"
+            className="btn-ghost-glass text-sm px-4 py-2"
+          >
+            Log In
+          </Link>
+          <Link
+            to="/auth?tab=register"
+            className="btn-glass text-sm"
+          >
+            Get Started
+          </Link>
         </div>
       </header>
 
-      <section className="px-6 pt-16 pb-24 max-w-3xl mx-auto text-center">
-        <span className="inline-block px-3 py-1 rounded bg-primary/10 text-primary text-xs font-medium mb-4 glow-primary">
+      {/* Hero */}
+      <section className="px-6 pt-20 pb-24 max-w-4xl mx-auto text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6"
+          style={{
+            background: "var(--glass-bg)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid var(--glass-border)",
+            color: "var(--accent-2)",
+          }}
+        >
+          <span className="w-2 h-2 rounded-full" style={{ background: "var(--accent-1)" }} />
           AI-Powered Productivity
-        </span>
-        <h1 className="text-4xl font-bold leading-tight mb-4">
-          Never Miss a <span className="text-gradient">Deadline Again</span>
+        </div>
+
+        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-5 tracking-tight" style={{ color: "var(--text-primary)" }}>
+          Never Miss a{" "}
+          <span className="text-gradient">Deadline Again</span>
         </h1>
-        <p className="text-base text-text-muted max-w-xl mx-auto mb-8">
-          An AI assistant that helps you finish tasks — not just remember them. Predicts risks, breaks down work, and optimizes your schedule.
+
+        <p className="text-lg max-w-2xl mx-auto mb-10" style={{ color: "var(--text-secondary)" }}>
+          An AI assistant that helps you finish tasks — not just remember them.
+          Predicts risks, breaks down work, and optimizes your schedule.
         </p>
+
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/auth?tab=register" className="btn-primary px-6 py-2.5">Start Free</Link>
-          <Link to="/auth" className="border border-default px-6 py-2.5 rounded font-medium text-sm text-text-muted hover:bg-bg-elevated transition-colors">Sign In</Link>
+          <Link to="/auth?tab=register" className="btn-glass px-8 py-3 text-base">
+            Start Free
+          </Link>
+          <Link to="/auth" className="btn-glass-secondary px-8 py-3 text-base">
+            Sign In
+          </Link>
         </div>
       </section>
 
-      <section className="px-6 pb-20 max-w-4xl mx-auto">
+      {/* Features */}
+      <section className="px-6 pb-24 max-w-5xl mx-auto">
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { title: "AI Task Breakdown", desc: "Large tasks automatically split into actionable subtasks with estimated durations." },
-            { title: "Risk Prediction", desc: "AI predicts which deadlines you'll miss before they happen and alerts you." },
-            { title: "Smart Scheduling", desc: "Automatically optimizes your daily schedule based on priorities and free time." },
-          ].map((feature) => (
-            <div key={feature.title} className="bg-bg-surface rounded-lg border border-default/50 p-5">
-              <h3 className="font-semibold text-sm mb-1">{feature.title}</h3>
-              <p className="text-sm text-text-muted">{feature.desc}</p>
+            {
+              emoji: "🧠",
+              title: "AI Task Breakdown",
+              desc: "Large tasks automatically split into actionable subtasks with estimated durations and priority ordering."
+            },
+            {
+              emoji: "🎯",
+              title: "Risk Prediction",
+              desc: "AI predicts which deadlines you'll miss before they happen and alerts you with actionable recommendations."
+            },
+            {
+              emoji: "📋",
+              title: "Smart Scheduling",
+              desc: "Automatically optimizes your daily schedule based on priorities, deadlines, and available time slots."
+            },
+            {
+              emoji: "🚨",
+              title: "Rescue Mode",
+              desc: "Emergency intervention that builds a complete survival plan when multiple deadlines are approaching."
+            },
+            {
+              emoji: "📊",
+              title: "Analytics & Insights",
+              desc: "Beautiful charts showing your productivity trends, completion rates, and behavioral patterns."
+            },
+            {
+              emoji: "⏱️",
+              title: "Focus Mode",
+              desc: "Built-in Pomodoro timer with configurable focus/break cycles to help you stay in the zone."
+            },
+          ].map((f) => (
+            <div
+              key={f.title}
+              className="glass-card p-6"
+            >
+              <span className="text-2xl mb-3 block">{f.emoji}</span>
+              <h3 className="font-semibold text-sm mb-1.5" style={{ color: "var(--text-primary)" }}>{f.title}</h3>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="px-6 py-8 text-center border-t" style={{ borderColor: "var(--glass-border)" }}>
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+          Built with ❤️ by DuePilot AI
+        </p>
+      </footer>
     </div>
   );
 }

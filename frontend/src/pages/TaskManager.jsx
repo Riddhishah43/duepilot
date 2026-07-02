@@ -46,75 +46,136 @@ export default function TaskManager() {
     catch { toast.error("Failed to delete task"); }
   };
 
-  const filters = ["all", "pending", "in-progress", "completed"];
+  const filters = ["all", "pending", "in-progress", "completed", "missed"];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 page-enter">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold">Tasks</h1>
-          <p className="text-sm text-text-muted">Manage and track your tasks</p>
+          <h1 className="page-heading">Tasks</h1>
+          <p className="page-subheading">Manage and track your tasks</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="btn-primary text-sm">+ New Task</button>
+        <button onClick={() => setShowCreate(true)} className="btn-glass text-sm">
+          + New Task
+        </button>
       </div>
 
-      <div className="flex gap-1.5 border-b border-default/50 pb-2">
+      {/* Filter tabs */}
+      <div className="tab-glass inline-flex">
         {filters.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1 text-sm rounded transition-colors ${
-              filter === f ? "bg-primary text-white" : "text-text-muted hover:text-text-main hover:bg-bg-elevated"
-            }`}
+            className={`tab-glass-item${filter === f ? " active" : ""}`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
           </button>
         ))}
       </div>
 
+      {/* Create form */}
       {showCreate && (
-        <form onSubmit={createTask} className="card space-y-3">
+        <form onSubmit={createTask} className="glass-card p-6 space-y-4">
           <h2 className="font-semibold text-sm">New Task</h2>
-          <input className="input-field" placeholder="Task title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-          <textarea className="input-field" placeholder="Description (optional)" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <div>
-            <label className="block text-xs text-text-muted mb-0.5">Deadline</label>
-            <input type="date" className="input-field" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} required />
+          <input
+            className="input-glass"
+            placeholder="Task title"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+            required
+          />
+          <textarea
+            className="input-glass"
+            placeholder="Description (optional)"
+            rows={2}
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+          <div className="grid sm:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs font-medium mb-1" style={{ color: "var(--text-muted)" }}>Deadline</label>
+              <input
+                type="date"
+                className="input-glass"
+                value={form.deadline}
+                onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1" style={{ color: "var(--text-muted)" }}>Duration (min)</label>
+              <input
+                type="number"
+                className="input-glass"
+                min={5} max={1440}
+                value={form.estimatedDuration}
+                onChange={(e) => setForm({ ...form, estimatedDuration: parseInt(e.target.value) || 60 })}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1" style={{ color: "var(--text-muted)" }}>Priority</label>
+              <select
+                className="input-glass"
+                value={form.priority}
+                onChange={(e) => setForm({ ...form, priority: e.target.value })}
+              >
+                <option value="low">🌱 Low Priority</option>
+                <option value="medium">⚡ Medium Priority</option>
+                <option value="high">🔥 High Priority</option>
+                <option value="critical">🔵 Critical Priority</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="block text-xs text-text-muted mb-0.5">Estimated Duration (minutes)</label>
-            <input type="number" className="input-field" min={5} max={1440} value={form.estimatedDuration} onChange={(e) => setForm({ ...form, estimatedDuration: parseInt(e.target.value) || 60 })} required />
-          </div>
-          <select className="input-field" value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
-            <option value="low">🌱 Low Priority</option>
-            <option value="medium">⚡ Medium Priority</option>
-            <option value="high">🔥 High Priority</option>
-            <option value="critical">🔵 Critical Priority</option>
-          </select>
-          <div className="flex gap-2">
-            <button type="submit" className="btn-primary text-sm">Create Task</button>
-            <button type="button" onClick={() => setShowCreate(false)} className="btn-ghost text-sm">Cancel</button>
+          <div className="flex gap-2 pt-2">
+            <button type="submit" className="btn-glass text-sm">Create Task</button>
+            <button type="button" onClick={() => setShowCreate(false)} className="btn-ghost-glass text-sm">Cancel</button>
           </div>
         </form>
       )}
 
+      {/* Task list */}
       {loading ? (
-        <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>
+        <div className="space-y-2">
+          {[1,2,3].map(i => <div key={i} className="skeleton h-24 rounded-2xl" />)}
+        </div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-10 text-slate-400"><p className="text-3xl mb-2">📋</p><p className="text-sm">No tasks found</p></div>
+        <div className="glass-card p-12 text-center">
+          <span className="text-4xl mb-3 block">📋</span>
+          <p className="font-semibold text-sm mb-1" style={{ color: "var(--text-primary)" }}>No tasks found</p>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            {filter === "all" ? "Create your first task to get started" : `No tasks with status "${filter}"`}
+          </p>
+        </div>
       ) : (
         <div className="space-y-2">
           {tasks.map((task) => (
             <div key={task._id} className="relative group">
               <TaskCard task={task} />
-              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {task.status !== "completed" && (
-                  <button onClick={() => updateStatus(task._id, "completed")} className="p-1 rounded bg-success/20 text-success hover:bg-success/30 text-xs leading-none">✓</button>
+                  <button
+                    onClick={() => updateStatus(task._id, "completed")}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all"
+                    style={{ background: "rgba(16,185,129,0.15)", color: "#6EE7B7" }}
+                    title="Mark complete"
+                  >✓</button>
                 )}
                 {task.status === "pending" && (
-                  <button onClick={() => updateStatus(task._id, "in-progress")} className="p-1 rounded bg-warning/20 text-warning hover:bg-warning/30 text-xs leading-none">▶</button>
+                  <button
+                    onClick={() => updateStatus(task._id, "in-progress")}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all"
+                    style={{ background: "rgba(245,158,11,0.15)", color: "#FCD34D" }}
+                    title="Start task"
+                  >▶</button>
                 )}
-                <button onClick={() => deleteTask(task._id)} className="p-1 rounded bg-accent/20 text-accent hover:bg-accent/30 text-xs leading-none">✕</button>
+                <button
+                  onClick={() => deleteTask(task._id)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all"
+                  style={{ background: "rgba(239,68,68,0.15)", color: "#FCA5A5" }}
+                  title="Delete task"
+                >✕</button>
               </div>
             </div>
           ))}

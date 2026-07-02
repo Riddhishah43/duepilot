@@ -158,8 +158,7 @@ async function seed() {
 
     // Create test user
     console.log("Creating test user...");
-    const hashedPassword = await bcrypt.hash(TEST_USER.password, 12);
-    const user = await User.create({ ...TEST_USER, password: hashedPassword, createdAt: new Date("2026-06-27T00:00:00.000Z") });
+    const user = await User.create({ ...TEST_USER, password: TEST_USER.password, createdAt: new Date("2026-06-27T00:00:00.000Z") });
     console.log(`Test user created: ${user.email}`);
 
     // Create Tasks (spread across last 30 days and next 30 days)

@@ -42,49 +42,99 @@ export default function Auth() {
 
   return (
     <div>
-      <div className="flex bg-bg-elevated rounded-md p-0.5 mb-5">
+      {/* Tabs */}
+      <div className="tab-glass mb-6">
         {["login", "register"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 py-1.5 rounded text-sm font-medium transition-colors ${
-              tab === t ? "bg-bg-surface text-primary border border-default/50" : "text-text-muted"
-            }`}
+            className={`tab-glass-item${tab === t ? " active" : ""}`}
           >
             {t === "login" ? "Sign In" : "Sign Up"}
           </button>
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         {tab === "register" && (
           <div>
-            <label className="block text-sm text-text-muted mb-1">Name</label>
-            <input type="text" className="input-field" placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+              Name
+            </label>
+            <input
+              type="text"
+              className="input-glass"
+              placeholder="Your name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
+            />
           </div>
         )}
         <div>
-          <label className="block text-sm text-text-muted mb-1">Email</label>
-          <input type="email" className="input-field" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+          <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+            Email
+          </label>
+          <input
+            type="email"
+            className="input-glass"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
+          />
         </div>
         <div>
-          <label className="block text-sm text-text-muted mb-1">Password</label>
-          <input type="password" className="input-field" placeholder="At least 6 characters" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={6} />
+          <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+            Password
+          </label>
+          <input
+            type="password"
+            className="input-glass"
+            placeholder="At least 6 characters"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+            minLength={6}
+          />
         </div>
-        <button type="submit" disabled={loading} className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-60">
-          {loading && <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>}
-          {tab === "login" ? "Sign In" : "Create Account"}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full btn-glass py-3 disabled:opacity-60"
+        >
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              Processing...
+            </span>
+          ) : (
+            tab === "login" ? "Sign In" : "Create Account"
+          )}
         </button>
       </form>
 
-      <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-default/50"></div></div>
-        <div className="relative flex justify-center text-xs"><span className="px-2 bg-bg-surface text-text-muted">or</span></div>
+      {/* Divider */}
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div style={{ width: "100%", borderTop: "1px solid var(--glass-border)" }} />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="px-3 text-xs font-medium" style={{ color: "var(--text-muted)", background: "var(--bg-glass-heavy)", backdropFilter: "blur(30px)", borderRadius: "var(--radius-pill)" }}>
+            or
+          </span>
+        </div>
       </div>
 
-      <button onClick={handleDemoLogin} disabled={loading} className="w-full px-4 py-2 rounded-md font-medium text-sm border border-border-default/50 text-text-muted hover:text-text-main hover:bg-bg-elevated transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+      {/* Demo */}
+      <button
+        onClick={handleDemoLogin}
+        disabled={loading}
+        className="w-full btn-glass-secondary py-3 disabled:opacity-60"
+      >
         {loading ? (
-          <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+          <span className="w-4 h-4 rounded-full border-2 border-[var(--accent-2)] border-t-transparent animate-spin" />
         ) : (
           "🚀 Try Demo Account"
         )}

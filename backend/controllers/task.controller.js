@@ -3,10 +3,11 @@ const Task = require("../models/task.model");
 const Subtask = require("../models/subtask.model");
 const groqService = require("../services/groq.service");
 const { logAction } = require("../services/pattern.service");
+const { paginate, paginationMeta } = require("../utils/paginate");
 
 exports.getTasks = async (req, res, next) => {
   try {
-    const { status, priority, category, archived, search } = req.query;
+    const { status, priority, category, archived, search, page, limit } = req.query;
     const filter = { userId: req.user._id };
 
     if (status) filter.status = status.includes(",") ? { $in: status.split(",") } : status;
@@ -19,8 +20,9 @@ exports.getTasks = async (req, res, next) => {
       filter.title = { $regex: escaped, $options: "i" };
     }
 
-    const tasks = await Task.find(filter).sort({ deadline: 1, priority: -1 });
-    res.json({ tasks });
+    const total = await Task.countDocuments(filter);
+    const tasks = await paginate(Task.find(filter).sort({ deadline: 1, priority: -1 }), page, limit);
+    res.json({ tasks, pagination: paginationMeta(total, page, limit) });
   } catch (error) {
     next(error);
   }
@@ -107,7 +109,10 @@ exports.updateTask = async (req, res, next) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    const hadDeadlineChange = req.body.deadline && req.body.deadline !== existingTask.deadline?.toISOString()?.split("T")[0];
+    const hadDeadlineChange = req.body.deadline && (
+      new Date(req.body.deadline).toISOString().split("T")[0] !==
+      existingTask.deadline?.toISOString()?.split("T")[0]
+    );
 
     const task = await Task.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },

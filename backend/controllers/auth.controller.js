@@ -124,9 +124,10 @@ exports.demoLogin = async (req, res, next) => {
 exports.deleteAccount = async (req, res, next) => {
   try {
     const userId = req.user._id;
+    const userTaskIds = await require("../models/task.model").find({ userId }).select("_id").then(ts => ts.map(t => t._id));
     await Promise.all([
       require("../models/task.model").deleteMany({ userId }),
-      require("../models/subtask.model").deleteMany({}),
+      require("../models/subtask.model").deleteMany({ taskId: { $in: userTaskIds } }),
       require("../models/goal.model").deleteMany({ userId }),
       require("../models/analytics.model").deleteMany({ userId }),
       require("../models/notification.model").deleteMany({ userId }),

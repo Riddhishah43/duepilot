@@ -1,12 +1,17 @@
-export default function StatCard({ title, value, icon }) {
+export default function StatCard({ title, value, icon, color }) {
   return (
-    <div className="bg-bg-surface rounded-lg border border-default/50 p-4 flex items-start gap-3">
-      <div className="w-10 h-10 rounded bg-primary/10 flex items-center justify-center text-base flex-shrink-0">
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs text-text-muted">{title}</p>
-        <p className="text-xl font-bold mt-0.5">{value}</p>
+    <div className="glass-card p-5">
+      <div className="flex items-start gap-3">
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0"
+          style={{ background: `${color || "var(--accent-2)"}15` }}
+        >
+          {icon}
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{title}</p>
+          <p className="stat-value mt-0.5">{value}</p>
+        </div>
       </div>
     </div>
   );

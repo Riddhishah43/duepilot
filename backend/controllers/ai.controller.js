@@ -203,7 +203,7 @@ exports.getDailyReport = async (req, res, next) => {
 
     const tasks = await Task.find({
       userId: req.user._id,
-      createdAt: { $gte: today, $lt: tomorrow },
+      deadline: { $gte: today, $lt: tomorrow },
     });
 
     const report = await groqService.generateDailyReport(
@@ -234,7 +234,10 @@ exports.getWeeklyReport = async (req, res, next) => {
 
     const tasks = await Task.find({
       userId: req.user._id,
-      createdAt: { $gte: sevenDaysAgo },
+      $or: [
+        { deadline: { $gte: sevenDaysAgo } },
+        { completedAt: { $gte: sevenDaysAgo } },
+      ],
     });
 
     const report = await groqService.generateWeeklyReport(

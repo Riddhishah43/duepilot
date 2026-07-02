@@ -1,10 +1,8 @@
-const Groq = require("groq-sdk");
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const { groqChatCompletion } = require("../utils/groqClient");
 
 const SYSTEM_PROMPTS = {
   taskBreakdown: `You are a task breakdown assistant. Break the given task into smaller actionable subtasks.
-Return a JSON array of subtasks, each with: title, duration (in minutes), suggestedOrder (number).
+Return a JSON object with a "subtasks" array, each item with: title (string), duration (number, minutes), suggestedOrder (number).
 Keep subtasks practical and achievable. Maximum 8 subtasks.`,
 
   priorityPrediction: `Analyze the task and determine priority based on deadline closeness, estimated duration, and importance.
@@ -37,31 +35,31 @@ Rules:
 8. Balance workload — don't burn out
 
 Return JSON: {
-  overview: {
-    totalTasks: number,
-    totalAvailableHours: number,
-    estimatedHoursNeeded: number,
-    completionProbability: number (0-100),
-    crisisLevel: "low"|"medium"|"high"|"critical"
+  "overview": {
+    "totalTasks": number,
+    "totalAvailableHours": number,
+    "estimatedHoursNeeded": number,
+    "completionProbability": number (0-100),
+    "crisisLevel": "low"|"medium"|"high"|"critical"
   },
-  categories: {
-    critical: [{ title: string, duration: number, deadline: string, reason: string }],
-    important: [{ title: string, duration: number, deadline: string, reason: string }],
-    optional: [{ title: string, duration: number, deadline: string, reason: string }]
+  "categories": {
+    "critical": [{ "title": string, "duration": number, "deadline": string, "reason": string }],
+    "important": [{ "title": string, "duration": number, "deadline": string, "reason": string }],
+    "optional": [{ "title": string, "duration": number, "deadline": string, "reason": string }]
   },
-  mergedTasks: [{ originalTasks: [string], into: string, reason: string }],
-  extensionsToRequest: [{ task: string, currentDeadline: string, suggestedDeadline: string, reason: string }],
-  removedTasks: [{ task: string, reason: string }],
-  schedule: [
+  "mergedTasks": [{ "originalTasks": [string], "into": string, "reason": string }],
+  "extensionsToRequest": [{ "task": string, "currentDeadline": string, "suggestedDeadline": string, "reason": string }],
+  "removedTasks": [{ "task": string, "reason": string }],
+  "schedule": [
     {
-      day: "Today",
-      date: "YYYY-MM-DD",
-      sessions: [
-        { time: "5 PM - 7 PM", task: "Operating Systems Project", type: "critical" }
+      "day": "Today",
+      "date": "YYYY-MM-DD",
+      "sessions": [
+        { "time": "5 PM - 7 PM", "task": "Operating Systems Project", "type": "critical" }
       ]
     }
   ],
-  urgentActions: ["string"]
+  "urgentActions": ["string"]
 }`,
 
   reminderGeneration: `Generate a smart, context-aware reminder message.
@@ -82,54 +80,53 @@ Look for:
 7. Optimal hours: Time slots with highest completion rates
 
 Return JSON: {
-  patterns: [
+  "patterns": [
     {
-      type: "avoidance"|"fatigue"|"deadline_crunch"|"day_pattern"|"scope_creep"|"abandonment"|"optimal_hours",
-      severity: "low"|"medium"|"high",
-      title: "string",
-      description: "string",
-      category: "string" | null,
-      suggestion: "string",
-      data: { affected: number, rate: number }
+      "type": "avoidance"|"fatigue"|"deadline_crunch"|"day_pattern"|"scope_creep"|"abandonment"|"optimal_hours",
+      "severity": "low"|"medium"|"high",
+      "title": "string",
+      "description": "string",
+      "category": "string | null",
+      "suggestion": "string",
+      "data": { "affected": number, "rate": number }
     }
   ],
-  topStrengths: ["string"],
-  weeklyTrend: "improving"|"declining"|"stable",
-  summary: "string"
+  "topStrengths": ["string"],
+  "weeklyTrend": "improving"|"declining"|"stable",
+  "summary": "string"
 }`,
 
-  smartNotifications: `You are a proactive AI productivity assistant. Generate smart, context-aware notifications that help users complete tasks on time.
+  smartNotifications: `You are a proactive AI productivity assistant. Generate smart, context-aware notifications.
 
 Analyze the user's current tasks, deadlines, estimated durations, priorities, progress, patterns, and available time. Generate only notifications that are genuinely useful and personalized.
 
-Notification types and when to use them:
-
-1. start_now: Task is due soon, user has free time now. Encourage starting immediately.
-2. best_time: User is in their peak productivity window. Encourage working on important tasks.
-3. rescue: Multiple deadlines approaching or high risk detected. Suggest Rescue Mode.
-4. focus: User hasn't been active today. Suggest a short focus session.
-5. habit: User has a streak that's about to break. Encourage maintaining it.
-6. overload: Too many tasks scheduled. Suggest rearranging.
-7. missed: A task was missed/rescheduled. Offer to re-plan.
-8. break: User has been working too long. Suggest a break.
-9. prediction: AI predicts a task may be missed. Suggest early action.
-10. reinforcement: User completed several tasks. Positive encouragement.
+Notification types:
+1. start_now: Task is due soon, user has free time now
+2. best_time: User is in their peak productivity window
+3. rescue: Multiple deadlines approaching or high risk detected
+4. focus: User hasn't been active today
+5. habit: User has a streak that's about to break
+6. overload: Too many tasks scheduled
+7. missed: A task was missed/rescheduled
+8. break: User has been working too long
+9. prediction: AI predicts a task may be missed
+10. reinforcement: User completed several tasks
 
 Return JSON: {
-  notifications: [
+  "notifications": [
     {
-      subtype: "start_now"|"best_time"|"rescue"|"focus"|"habit"|"overload"|"missed"|"break"|"prediction"|"reinforcement",
-      title: "string (short, max 60 chars)",
-      message: "string (personalized, actionable, 1-3 sentences)",
-      priority: number (0-100, higher = more urgent),
-      taskId: "string | null",
-      actionUrl: "string | null" (e.g. "/tasks", "/focus", "/rescue", "/study-planner", "/insights"),
-      emoji: "string"
+      "subtype": "start_now"|"best_time"|"rescue"|"focus"|"habit"|"overload"|"missed"|"break"|"prediction"|"reinforcement",
+      "title": "string (max 60 chars)",
+      "message": "string (personalized, actionable, 1-3 sentences)",
+      "priority": number (0-100),
+      "taskId": "string | null",
+      "actionUrl": "string | null",
+      "emoji": "string"
     }
   ]
 }
 
-Only generate notifications that are relevant. Quality over quantity. 1-5 notifications max.`,
+Only generate notifications that are relevant. 1-5 notifications max.`,
 
   studyPlan: `You are an AI study planner. Create a personalized daily study schedule based on the user's subjects, exam dates, deadlines, difficulty levels, available hours per day, preferred time, and days off.
 
@@ -140,22 +137,22 @@ Calculate:
 - Balance difficult and easy subjects
 
 Return JSON: {
-  planTitle: "string",
-  schedule: [
+  "planTitle": "string",
+  "schedule": [
     {
-      date: "YYYY-MM-DD",
-      dayName: "Monday",
-      sessions: [
-        { subject: "string", startTime: "HH:MM", endTime: "HH:MM", topic: "string" }
+      "date": "YYYY-MM-DD",
+      "dayName": "Monday",
+      "sessions": [
+        { "subject": "string", "startTime": "HH:MM", "endTime": "HH:MM", "topic": "string" }
       ]
     }
   ],
-  stats: {
-    totalStudyDays: number,
-    totalStudyHours: number,
-    subjectsCovered: number
+  "stats": {
+    "totalStudyDays": number,
+    "totalStudyHours": number,
+    "subjectsCovered": number
   },
-  tips: ["string"]
+  "tips": ["string"]
 }
 
 Smart rules:
@@ -169,25 +166,23 @@ Smart rules:
 - Add short breaks between sessions`,
 };
 
+const MODEL = "llama-3.3-70b-versatile";
+
 async function analyzeTaskBreakdown(taskTitle, taskDescription) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.taskBreakdown },
-      {
-        role: "user",
-        content: `Task: "${taskTitle}"\nDescription: "${taskDescription || "No description"}"`,
-      },
+      { role: "user", content: `Task: "${taskTitle}"\nDescription: "${taskDescription || "No description"}"` },
     ],
     response_format: { type: "json_object" },
     temperature: 0.3,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function predictPriority(taskDetails) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.priorityPrediction },
       { role: "user", content: `Task details: ${JSON.stringify(taskDetails)}` },
@@ -195,12 +190,11 @@ async function predictPriority(taskDetails) {
     response_format: { type: "json_object" },
     temperature: 0.3,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function analyzeRisk(taskDetails) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.riskAnalysis },
       { role: "user", content: `Task details: ${JSON.stringify(taskDetails)}` },
@@ -208,28 +202,23 @@ async function analyzeRisk(taskDetails) {
     response_format: { type: "json_object" },
     temperature: 0.3,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function createSmartSchedule(tasks, availableSlots) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.smartSchedule },
-      {
-        role: "user",
-        content: `Tasks: ${JSON.stringify(tasks)}\nAvailable slots: ${JSON.stringify(availableSlots)}`,
-      },
+      { role: "user", content: `Tasks: ${JSON.stringify(tasks)}\nAvailable slots: ${JSON.stringify(availableSlots)}` },
     ],
     response_format: { type: "json_object" },
     temperature: 0.3,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function generateDailyReport(userData, tasksData) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.dailyReport },
       { role: "user", content: `User data: ${JSON.stringify(userData)}\nTasks: ${JSON.stringify(tasksData)}` },
@@ -237,12 +226,11 @@ async function generateDailyReport(userData, tasksData) {
     response_format: { type: "json_object" },
     temperature: 0.5,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function generateWeeklyReport(userData, weeklyTasks) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.weeklyReport },
       { role: "user", content: `User data: ${JSON.stringify(userData)}\nWeekly data: ${JSON.stringify(weeklyTasks)}` },
@@ -250,12 +238,11 @@ async function generateWeeklyReport(userData, weeklyTasks) {
     response_format: { type: "json_object" },
     temperature: 0.5,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function createRescuePlan(tasks, userPreferences) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.rescueMode },
       {
@@ -270,12 +257,11 @@ ${JSON.stringify(tasks, null, 2)}`,
     response_format: { type: "json_object" },
     temperature: 0.4,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function generateSmartNotifications(tasksData, userData, patterns) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.smartNotifications },
       {
@@ -289,12 +275,11 @@ Detected patterns: ${JSON.stringify(patterns)}`,
     response_format: { type: "json_object" },
     temperature: 0.5,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function generateSmartReminder(taskDetails) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.reminderGeneration },
       { role: "user", content: `Task: ${JSON.stringify(taskDetails)}` },
@@ -302,12 +287,11 @@ async function generateSmartReminder(taskDetails) {
     response_format: { type: "json_object" },
     temperature: 0.5,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function planGoalMilestone(goalDetails) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.goalPlanning },
       { role: "user", content: `Goal: ${JSON.stringify(goalDetails)}` },
@@ -315,12 +299,11 @@ async function planGoalMilestone(goalDetails) {
     response_format: { type: "json_object" },
     temperature: 0.3,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function analyzePatterns(actionLogs, taskStats) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.patternDetection },
       {
@@ -331,12 +314,11 @@ async function analyzePatterns(actionLogs, taskStats) {
     response_format: { type: "json_object" },
     temperature: 0.4,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 async function generateStudyPlan(subjects, preferences) {
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+  return groqChatCompletion({
+    model: MODEL,
     messages: [
       { role: "system", content: SYSTEM_PROMPTS.studyPlan },
       { role: "user", content: `Subjects: ${JSON.stringify(subjects)}\nPreferences: ${JSON.stringify(preferences)}` },
@@ -344,7 +326,6 @@ async function generateStudyPlan(subjects, preferences) {
     response_format: { type: "json_object" },
     temperature: 0.4,
   });
-  return JSON.parse(response.choices[0].message.content);
 }
 
 module.exports = {
