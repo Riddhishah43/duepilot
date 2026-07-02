@@ -26,15 +26,15 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 function WakeUpScreen() {
   return (
-    <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center text-center px-4">
-      <div className="glass-card-static w-16 h-16 flex items-center justify-center text-2xl font-bold mb-6 text-gradient glow-accent">
+    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center text-center px-4">
+      <div className="card w-16 h-16 flex items-center justify-center text-2xl font-bold mb-6 text-accent">
         DP
       </div>
-      <h1 className="text-xl font-bold text-[#F1F5F9] mb-3">Waking up DuePilot server...</h1>
-      <p className="text-sm text-[#64748B] max-w-sm mb-6">
+      <h1 className="text-xl font-semibold text-text-primary mb-3">Waking up DuePilot server...</h1>
+      <p className="text-sm text-text-secondary max-w-sm mb-6">
         The server was asleep. This usually takes a few seconds.
       </p>
-      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
     </div>
   );
 }
@@ -43,8 +43,8 @@ function ProtectedRoute({ children }) {
   const { user, loading, wakingUp } = useAuth();
   if (wakingUp) return <WakeUpScreen />;
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-[#07111F]">
-      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
+    <div className="flex items-center justify-center min-h-screen bg-bg-primary">
+      <div className="w-8 h-8 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
     </div>
   );
   if (!user) return <Navigate to="/auth" replace />;
@@ -55,8 +55,8 @@ function PublicRoute({ children }) {
   const { user, loading, wakingUp } = useAuth();
   if (wakingUp) return <WakeUpScreen />;
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-[#07111F]">
-      <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#5B8CFF] animate-spin" />
+    <div className="flex items-center justify-center min-h-screen bg-bg-primary">
+      <div className="w-8 h-8 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
     </div>
   );
   if (user) return <Navigate to="/dashboard" replace />;
@@ -71,19 +71,19 @@ function App() {
         position="top-right"
         toastOptions={{
           style: {
-            background: "rgba(15,23,42,0.8)",
-            backdropFilter: "blur(30px)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "18px",
-            color: "#F1F5F9",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            background: "rgb(30 41 59)",
+            border: "1px solid rgb(51 65 85)",
+            borderRadius: "12px",
+            color: "#F8FAFC",
+            fontSize: "14px",
+            padding: "12px 16px",
           },
           duration: 4000,
         }}
       />
       <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--bg-primary)" }}>
-          <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[var(--accent-2)] animate-spin" />
+        <div className="flex items-center justify-center min-h-screen bg-bg-primary">
+          <div className="w-8 h-8 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
         </div>
       }>
         <Routes>

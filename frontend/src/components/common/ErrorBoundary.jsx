@@ -18,14 +18,13 @@ export default class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div className="flex flex-col items-center justify-center min-h-[40vh] text-center space-y-3 p-8">
-          <span className="text-4xl">⚠️</span>
-          <h2 className="text-lg font-semibold text-text-main">Something went wrong</h2>
+          <h2 className="text-lg font-semibold text-text-primary">Something went wrong</h2>
           <p className="text-sm text-text-muted max-w-md">
             {this.props.fallbackMessage || "An unexpected error occurred. Please try refreshing the page."}
           </p>
           <button
             onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload(); }}
-            className="btn-primary text-sm"
+            className="btn btn-primary text-sm"
           >
             Refresh Page
           </button>

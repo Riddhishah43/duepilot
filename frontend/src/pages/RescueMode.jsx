@@ -37,8 +37,8 @@ export default function RescueMode() {
   if (!activated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-5">
-        <BellRing size={64} />
-        <h1 className="text-2xl font-bold">Rescue Mode</h1>
+        <BellRing size={48} className="text-accent" />
+        <h1 className="page-heading text-2xl">Rescue Mode</h1>
         <p className="text-sm text-text-muted max-w-md">
           AI analyzes all your pending tasks and builds a complete survival plan —
           prioritizes, merges, reschedules, and tells you exactly what to do.
@@ -46,9 +46,9 @@ export default function RescueMode() {
         <button
           onClick={activateRescue}
           disabled={loading}
-          className="btn btn-primary px-8 py-3 rounded-lg text-base font-semibold transition-colors disabled:opacity-60"
+          className="btn btn-primary h-11 px-8 text-sm"
         >
-          {loading ? "Analyzing..." : <><BellRing size={20} className="inline" /> Activate Rescue Mode</>}
+          {loading ? "Analyzing..." : <><BellRing size={18} /> Activate Rescue Mode</>}
         </button>
       </div>
     );
@@ -70,12 +70,9 @@ export default function RescueMode() {
   return (
     <div className="space-y-5 max-w-3xl mx-auto">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BellRing size={24} />
-          <div>
-            <h1 className="text-lg font-bold text-accent">Rescue Mode Activated</h1>
-            <p className="text-xs text-text-muted">AI-generated survival plan</p>
-          </div>
+        <div>
+          <h1 className="page-heading">Rescue Mode Activated</h1>
+          <p className="page-subheading">AI-generated survival plan</p>
         </div>
         <button onClick={reset} className="btn btn-ghost text-xs">New Rescue</button>
       </div>

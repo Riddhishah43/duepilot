@@ -37,17 +37,17 @@ const features = [
 export default function Landing() {
   return (
     <div className="min-h-screen bg-bg-primary">
-      <header className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="DuePilot Home">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white bg-accent">
               DP
             </div>
             <span className="font-semibold text-base text-text-primary">DuePilot</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-2">
             <Link to="/auth" className="btn btn-ghost text-sm">
-              Log In
+              Sign In
             </Link>
             <Link to="/auth?tab=register" className="btn btn-primary text-sm">
               Get Started

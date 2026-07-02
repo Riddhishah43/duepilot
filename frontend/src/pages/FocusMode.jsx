@@ -74,7 +74,7 @@ export default function FocusMode() {
           {!isRunning ? (
             <button onClick={toggleTimer} className="btn btn-primary">Start</button>
           ) : (
-            <button onClick={toggleTimer} className="bg-warning text-white px-5 py-2 rounded-lg font-medium hover:bg-warning/90 transition-colors">Pause</button>
+            <button onClick={toggleTimer} className="btn btn-primary bg-warning hover:bg-warning/90 border-warning">Pause</button>
           )}
           <button onClick={resetTimer} className="btn btn-ghost">Reset</button>
         </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../services/api";
-import { AlarmClock, Sparkles, BellRing, Target, Flame, AlertTriangle, ClipboardList, Coffee, PartyPopper, Bot, Lightbulb } from "lucide-react";
+import { AlarmClock, Sparkles, BellRing, Target, Flame, AlertTriangle, ClipboardList, Coffee, PartyPopper, Bot, Lightbulb, X } from "lucide-react";
 
 const subtypeMeta = {
   start_now: { icon: AlarmClock, label: "Start Now", color: "bg-accent-light border-accent" },
@@ -142,9 +142,10 @@ export default function SmartNotifications() {
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); markRead(n._id); }}
-                    className="text-text-secondary hover:text-text-primary text-lg shrink-0"
+                    className="text-text-secondary hover:text-text-primary shrink-0"
+                    aria-label="Dismiss"
                   >
-                    ×
+                    <X size={16} />
                   </button>
                 </div>
               </div>

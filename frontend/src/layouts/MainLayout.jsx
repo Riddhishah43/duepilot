@@ -47,8 +47,7 @@ export default function MainLayout({ children }) {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: "var(--bg-primary)" }}>
-      {/* Sidebar Overlay */}
+    <div className="min-h-screen flex bg-bg-primary">
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
@@ -56,27 +55,20 @@ export default function MainLayout({ children }) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-56 flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto ${
+        className={`fixed inset-y-0 left-0 z-40 w-56 flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto bg-bg-tertiary border-r border-border ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ background: "var(--bg-tertiary)", borderRight: "1px solid var(--border)" }}
       >
-        {/* Logo */}
-        <div className="h-14 flex items-center gap-2.5 px-4 border-b" style={{ borderColor: "var(--border)" }}>
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white shrink-0"
-            style={{ background: "var(--accent)" }}
-          >
+        <div className="h-14 flex items-center gap-2.5 px-4 border-b border-border">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white shrink-0 bg-accent">
             DP
           </div>
           <div>
-            <h2 className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>DuePilot</h2>
+            <h2 className="font-semibold text-sm text-text-primary">DuePilot</h2>
           </div>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
           {navItems.map((item) => (
             <NavLink
@@ -91,20 +83,16 @@ export default function MainLayout({ children }) {
           ))}
         </nav>
 
-        {/* User section */}
-        <div className="p-3 border-t" style={{ borderColor: "var(--border)" }}>
+        <div className="p-3 border-t border-border">
           <div className="flex items-center gap-2.5 px-2 mb-2">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0"
-              style={{ background: "var(--accent)" }}
-            >
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0 bg-accent">
               {user?.name?.charAt(0) || "U"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
+              <p className="text-sm font-medium truncate text-text-primary">
                 {user?.name || "User"}
               </p>
-              <p className="text-[11px] truncate" style={{ color: "var(--text-muted)" }}>
+              <p className="text-[11px] truncate text-text-muted">
                 {user?.email}
               </p>
             </div>
@@ -119,8 +107,7 @@ export default function MainLayout({ children }) {
             </button>
             <button
               onClick={handleLogout}
-              className="btn btn-ghost flex-1 text-xs"
-              style={{ color: "var(--danger)" }}
+              className="btn btn-ghost flex-1 text-xs text-danger"
             >
               <LogOut size={14} />
               Logout
@@ -129,17 +116,11 @@ export default function MainLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header
-          className="sticky top-0 z-20 h-14 border-b flex items-center px-4 lg:px-6 gap-3"
-          style={{ background: "var(--bg-primary)", borderColor: "var(--border)" }}
-        >
+        <header className="sticky top-0 z-20 h-14 border-b border-border flex items-center px-4 lg:px-6 gap-3 bg-bg-primary">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden p-2 rounded-lg transition-colors hover:bg-[var(--bg-secondary)]"
-            style={{ color: "var(--text-secondary)" }}
+            className="lg:hidden p-2 rounded-lg transition-colors hover:bg-bg-secondary text-text-secondary"
             aria-label="Toggle sidebar"
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}

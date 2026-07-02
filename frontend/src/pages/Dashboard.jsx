@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import api from "../services/api";
-import { AlarmClock, Sparkles, BellRing, Target, Flame, AlertTriangle, ClipboardList, Coffee, Wand, PartyPopper, Lightbulb, Star, Calendar } from "lucide-react";
+import { AlarmClock, Sparkles, BellRing, Target, Flame, AlertTriangle, ClipboardList, Coffee, Wand, PartyPopper, Lightbulb, Star, Calendar, X } from "lucide-react";
 
 const subtypeMeta = {
   start_now: { icon: AlarmClock },
@@ -68,11 +68,11 @@ export default function Dashboard() {
           <div className="skeleton h-4 w-48" />
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {[1,2,3,4].map(i => <div key={i} className="skeleton h-24 rounded-2xl" />)}
+          {[1,2,3,4].map(i => <div key={i} className="skeleton h-24" />)}
         </div>
         <div className="grid lg:grid-cols-2 gap-5">
-          <div className="skeleton h-64 rounded-2xl" />
-          <div className="skeleton h-64 rounded-2xl" />
+          <div className="skeleton h-64" />
+          <div className="skeleton h-64" />
         </div>
       </div>
     );
@@ -111,10 +111,10 @@ export default function Dashboard() {
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); dismissNotif(smartNotif._id); }}
-            className="text-lg shrink-0 opacity-60 hover:opacity-100 transition-opacity text-text-muted"
+            className="shrink-0 opacity-60 hover:opacity-100 transition-opacity text-text-muted"
             aria-label="Dismiss notification"
           >
-            &times;
+            <X size={16} />
           </button>
         </div>
       )}
@@ -157,7 +157,7 @@ export default function Dashboard() {
                 <LineChart data={weeklyChartData}>
                   <XAxis dataKey="date" stroke="#64748B" fontSize={12} />
                   <YAxis stroke="#64748B" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                  <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
                   <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2.5} dot={{ r: 3, fill: "var(--accent)" }} />
                   <Line type="monotone" dataKey="completed" stroke="#22C55E" strokeWidth={2.5} dot={{ r: 3, fill: "#22C55E" }} />
                 </LineChart>

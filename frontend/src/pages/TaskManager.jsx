@@ -135,7 +135,7 @@ export default function TaskManager() {
 
       {loading ? (
         <div className="space-y-2">
-          {[1,2,3].map(i => <div key={i} className="skeleton h-24 rounded-2xl" />)}
+          {[1,2,3].map(i => <div key={i} className="skeleton h-24" />)}
         </div>
       ) : tasks.length === 0 ? (
         <div className="card p-12 text-center">
@@ -154,22 +154,22 @@ export default function TaskManager() {
                 {task.status !== "completed" && (
                   <button
                     onClick={() => updateStatus(task._id, "completed")}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all bg-success-light text-success"
-                    title="Mark complete"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-success bg-success/15 hover:bg-success/25 transition-colors"
+                    aria-label="Mark complete"
                   ><Check size={14} /></button>
                 )}
                 {task.status === "pending" && (
                   <button
                     onClick={() => updateStatus(task._id, "in-progress")}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all bg-warning-light text-warning"
-                    title="Start task"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-warning bg-warning/15 hover:bg-warning/25 transition-colors"
+                    aria-label="Start task"
                   ><Play size={14} /></button>
                 )}
                 <button
                   onClick={() => deleteTask(task._id)}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all bg-danger-light text-danger"
-                    title="Delete task"
-                  ><X size={14} /></button>
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-danger bg-danger/15 hover:bg-danger/25 transition-colors"
+                  aria-label="Delete task"
+                ><X size={14} /></button>
               </div>
             </div>
           ))}

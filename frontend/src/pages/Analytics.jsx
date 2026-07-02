@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import api from "../services/api";
 import { BarChart3, CheckCircle, XCircle, Clock, TrendingUp, Flame } from "lucide-react";
 
-const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#6B7280", "#8B5CF6"];
+const CHART_COLORS = { accent: "#3B82F6", success: "#22C55E", warning: "#F59E0B", danger: "#EF4444", muted: "#6B7280" };
 const PRIORITY_COLORS = { high: "#EF4444", medium: "#F59E0B", low: "#22C55E" };
 
 export default function Analytics() {
@@ -107,8 +107,8 @@ export default function Analytics() {
               <AreaChart data={dailyChartData}>
                 <XAxis dataKey="date" stroke="#94A3B8" fontSize={11} />
                 <YAxis domain={[0, 100]} stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
-                <Area type="monotone" dataKey="score" stroke="#3B82F6" fill="rgba(59,130,246,0.1)" strokeWidth={2} dot={{ r: 3, fill: "#3B82F6" }} />
+                <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
+                <Area type="monotone" dataKey="score" stroke={CHART_COLORS.accent} fill="rgba(59,130,246,0.1)" strokeWidth={2} dot={{ r: 3, fill: CHART_COLORS.accent }} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
@@ -123,7 +123,7 @@ export default function Analytics() {
               <BarChart data={priorityChartData} barGap={-8}>
                 <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
                 <Bar dataKey="total" fill="#475569" radius={[2, 2, 0, 0]} name="Total" />
                 <Bar dataKey="completed" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Completed" />
               </BarChart>
@@ -152,7 +152,7 @@ export default function Analytics() {
               <BarChart data={dailyChartData} stackOffset="sign">
                 <XAxis dataKey="date" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
                 <Bar dataKey="completed" stackId="a" fill="#22C55E" radius={[2, 2, 0, 0]} name="Completed" />
                 <Bar dataKey="pending" stackId="a" fill="#F59E0B" radius={[2, 2, 0, 0]} name="Pending" />
                 <Bar dataKey="missed" stackId="a" fill="#EF4444" radius={[2, 2, 0, 0]} name="Missed" />
@@ -201,7 +201,7 @@ export default function Analytics() {
               <BarChart data={hoursChartData}>
                 <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
                 <Bar dataKey="hours" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Hours" />
               </BarChart>
             </ResponsiveContainer>
@@ -242,7 +242,7 @@ export default function Analytics() {
             <BarChart data={categoryChartData}>
               <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
               <YAxis stroke="#94A3B8" fontSize={11} />
-              <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+              <Tooltip contentStyle={{ background: "rgb(var(--card-bg))", border: "1px solid rgb(var(--card-border))", borderRadius: "12px", color: "rgb(var(--text-primary))", fontSize: "13px" }} />
               <Bar dataKey="total" fill="#475569" radius={[2, 2, 0, 0]} name="Total" />
               <Bar dataKey="completed" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Completed" />
               <Bar dataKey="missed" fill="#EF4444" radius={[2, 2, 0, 0]} name="Missed" />

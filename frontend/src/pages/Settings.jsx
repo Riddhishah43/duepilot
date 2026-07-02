@@ -198,7 +198,7 @@ export default function Settings() {
           <div className="space-y-1.5">
             {Object.entries(notifLabels).map(([key, label]) => (
               <label key={key} className="flex items-center gap-2.5 p-1.5 rounded hover:bg-bg-secondary cursor-pointer">
-                <input type="checkbox" checked={prefs.notificationPreferences[key]} onChange={() => toggleNotif(key)} className="w-3.5 h-3.5 accent-accent" />
+                <input type="checkbox" checked={prefs.notificationPreferences[key]} onChange={() => toggleNotif(key)} className="checkbox" />
                 <span className="text-xs">{label}</span>
               </label>
             ))}

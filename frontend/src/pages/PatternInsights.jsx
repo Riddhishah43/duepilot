@@ -110,10 +110,10 @@ export default function PatternInsights() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <h3 className="text-sm font-semibold">{p.title}</h3>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                      p.severity === "high" ? "bg-danger-light text-danger" :
-                      p.severity === "medium" ? "bg-warning/20 text-warning" :
-                      "bg-accent-light text-accent"
+                    <span className={`badge ${
+                      p.severity === "high" ? "badge-danger" :
+                      p.severity === "medium" ? "badge-warning" :
+                      "badge-accent"
                     }`}>
                       {p.severity}
                     </span>
