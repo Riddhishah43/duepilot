@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from "recharts";
 import toast from "react-hot-toast";
 import api from "../services/api";
+import { BarChart3, CheckCircle, XCircle, Clock, TrendingUp, Flame } from "lucide-react";
 
-const COLORS = ["#8B5CF6", "#22D3EE", "#FF4D8D", "#34D399", "#F59E0B"];
-const PRIORITY_COLORS = { high: "#FF4D8D", medium: "#FBBF24", low: "#34D399" };
+const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#6B7280", "#8B5CF6"];
+const PRIORITY_COLORS = { high: "#EF4444", medium: "#F59E0B", low: "#22C55E" };
 
 export default function Analytics() {
   const [data, setData] = useState(null);
@@ -26,7 +27,7 @@ export default function Analytics() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
+        <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
       </div>
     );
   }
@@ -64,33 +65,33 @@ export default function Analytics() {
   const riskChartData = data?.riskTrend || [];
 
   const statsCards = [
-    { label: "Total Tasks", value: data?.totalTasks || 0, icon: "📊", color: "text-primary" },
-    { label: "Completed", value: data?.completedTasks || 0, icon: "✅", color: "text-success" },
-    { label: "Missed", value: data?.missedTasks || 0, icon: "❌", color: "text-accent" },
-    { label: "Pending", value: data?.pendingTasks || 0, icon: "⏳", color: "text-warning" },
-    { label: "Completion", value: `${data?.completionRate || 0}%`, icon: "📈", color: data?.completionRate >= 70 ? "text-success" : "text-accent" },
-    { label: "Day Streak", value: `${data?.streak || 0}d`, icon: "🔥", color: "text-orange-500" },
+    { label: "Total Tasks", value: data?.totalTasks || 0, icon: BarChart3, color: "text-accent" },
+    { label: "Completed", value: data?.completedTasks || 0, icon: CheckCircle, color: "text-success" },
+    { label: "Missed", value: data?.missedTasks || 0, icon: XCircle, color: "text-danger" },
+    { label: "Pending", value: data?.pendingTasks || 0, icon: Clock, color: "text-warning" },
+    { label: "Completion", value: `${data?.completionRate || 0}%`, icon: TrendingUp, color: data?.completionRate >= 70 ? "text-success" : "text-danger" },
+    { label: "Day Streak", value: `${data?.streak || 0}d`, icon: Flame, color: "text-orange-500" },
   ];
 
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-lg font-semibold">Analytics</h1>
-        <p className="text-sm text-text-muted">Your productivity insights at a glance</p>
+        <h1 className="page-heading">Analytics</h1>
+        <p className="page-subheading">Your productivity insights at a glance</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {statsCards.map((s) => (
           <div key={s.label} className="card text-center p-3">
-            <p className="text-lg mb-0.5">{s.icon}</p>
+            <p className="text-lg mb-0.5"><s.icon size={20} /></p>
             <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-[11px] text-slate-400">{s.label}</p>
+            <p className="text-[11px] text-text-muted">{s.label}</p>
           </div>
         ))}
       </div>
 
       {data?.bestDay && (
-        <div className="card bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+        <div className="card">
           <p className="text-sm">
             <span className="font-semibold">Best Productivity Day:</span>{" "}
             {data.bestDay.day} ({data.bestDay.hours}h of work)
@@ -104,20 +105,14 @@ export default function Analytics() {
           {dailyChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={dailyChartData}>
-                <defs>
-                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
                 <XAxis dataKey="date" stroke="#94A3B8" fontSize={11} />
                 <YAxis domain={[0, 100]} stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
-                <Area type="monotone" dataKey="score" stroke="#8B5CF6" fill="url(#scoreGrad)" strokeWidth={2} dot={{ r: 3, fill: "#8B5CF6" }} />
+                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Area type="monotone" dataKey="score" stroke="#3B82F6" fill="rgba(59,130,246,0.1)" strokeWidth={2} dot={{ r: 3, fill: "#3B82F6" }} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-8">No weekly data yet</p>
+            <p className="text-sm text-text-muted text-center py-8">No weekly data yet</p>
           )}
         </div>
 
@@ -128,18 +123,18 @@ export default function Analytics() {
               <BarChart data={priorityChartData} barGap={-8}>
                 <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
-                <Bar dataKey="total" fill="#364156" radius={[2, 2, 0, 0]} name="Total" />
-                <Bar dataKey="completed" fill="#8B5CF6" radius={[2, 2, 0, 0]} name="Completed" />
+                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Bar dataKey="total" fill="#475569" radius={[2, 2, 0, 0]} name="Total" />
+                <Bar dataKey="completed" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Completed" />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-8">No data yet</p>
+            <p className="text-sm text-text-muted text-center py-8">No data yet</p>
           )}
           {priorityChartData.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mt-3">
               {priorityChartData.map((p) => (
-                <div key={p.name} className="text-center p-1.5 rounded bg-bg-elevated">
+                <div key={p.name} className="text-center p-1.5 rounded bg-bg-secondary">
                   <p className="text-xs text-text-muted">{p.name}</p>
                   <p className="text-sm font-bold">{p.rate}%</p>
                 </div>
@@ -157,14 +152,14 @@ export default function Analytics() {
               <BarChart data={dailyChartData} stackOffset="sign">
                 <XAxis dataKey="date" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
-                <Bar dataKey="completed" stackId="a" fill="#34D399" radius={[2, 2, 0, 0]} name="Completed" />
-                <Bar dataKey="pending" stackId="a" fill="#FBBF24" radius={[2, 2, 0, 0]} name="Pending" />
-                <Bar dataKey="missed" stackId="a" fill="#FF4D8D" radius={[2, 2, 0, 0]} name="Missed" />
+                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Bar dataKey="completed" stackId="a" fill="#22C55E" radius={[2, 2, 0, 0]} name="Completed" />
+                <Bar dataKey="pending" stackId="a" fill="#F59E0B" radius={[2, 2, 0, 0]} name="Pending" />
+                <Bar dataKey="missed" stackId="a" fill="#EF4444" radius={[2, 2, 0, 0]} name="Missed" />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-8">No daily data yet</p>
+            <p className="text-sm text-text-muted text-center py-8">No daily data yet</p>
           )}
         </div>
 
@@ -178,23 +173,22 @@ export default function Analytics() {
                     <span className="font-medium">{cat.name}</span>
                     <span className="text-text-muted">{cat.completed}/{cat.total}</span>
                   </div>
-                  <div className="h-2 bg-bg-elevated rounded-full overflow-hidden">
+                  <div className="h-2 bg-bg-secondary rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full transition-all"
+                      className="h-full rounded-full transition-all bg-accent"
                       style={{
                         width: `${cat.total > 0 ? (cat.completed / cat.total) * 100 : 0}%`,
-                        backgroundColor: COLORS[i % COLORS.length],
                       }}
                     />
                   </div>
                   {cat.missed > 0 && (
-                    <p className="text-[10px] text-accent mt-0.5">{cat.missed} missed</p>
+                    <p className="text-[10px] text-danger mt-0.5">{cat.missed} missed</p>
                   )}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-8">No categories yet</p>
+            <p className="text-sm text-text-muted text-center py-8">No categories yet</p>
           )}
         </div>
       </div>
@@ -207,12 +201,12 @@ export default function Analytics() {
               <BarChart data={hoursChartData}>
                 <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} />
                 <YAxis stroke="#94A3B8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
-                <Bar dataKey="hours" fill="#22D3EE" radius={[2, 2, 0, 0]} name="Hours" />
+                <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+                <Bar dataKey="hours" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Hours" />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-8">No focus data yet</p>
+            <p className="text-sm text-text-muted text-center py-8">No focus data yet</p>
           )}
         </div>
 
@@ -223,20 +217,20 @@ export default function Analytics() {
               {riskChartData.slice(0, 8).map((r, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs">
                   <span className="w-24 truncate text-text-muted">{r.title}</span>
-                  <div className="flex-1 h-1.5 bg-bg-elevated rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-bg-secondary rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${r.riskScore >= 70 ? "bg-accent" : r.riskScore >= 40 ? "bg-warning" : "bg-success"}`}
                       style={{ width: `${r.riskScore}%` }}
                     />
                   </div>
-                  <span className={`font-medium w-8 text-right ${r.riskScore >= 70 ? "text-accent" : r.riskScore >= 40 ? "text-warning" : "text-success"}`}>
+                  <span className={`font-medium w-8 text-right ${r.riskScore >= 70 ? "text-danger" : r.riskScore >= 40 ? "text-warning" : "text-success"}`}>
                     {r.riskScore}%
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-6">No risk data yet. Create tasks with deadlines.</p>
+            <p className="text-sm text-text-muted text-center py-6">No risk data yet. Create tasks with deadlines.</p>
           )}
         </div>
       </div>
@@ -248,14 +242,14 @@ export default function Analytics() {
             <BarChart data={categoryChartData}>
               <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
               <YAxis stroke="#94A3B8" fontSize={11} />
-              <Tooltip contentStyle={{ background: "#2A3242", border: "1px solid #475569", borderRadius: "18px", color: "#F8FAFC" }} />
-              <Bar dataKey="total" fill="#364156" radius={[2, 2, 0, 0]} name="Total" />
-              <Bar dataKey="completed" fill="#8B5CF6" radius={[2, 2, 0, 0]} name="Completed" />
-              <Bar dataKey="missed" fill="#FF4D8D" radius={[2, 2, 0, 0]} name="Missed" />
+              <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: "8px", color: "#F8FAFC" }} />
+              <Bar dataKey="total" fill="#475569" radius={[2, 2, 0, 0]} name="Total" />
+              <Bar dataKey="completed" fill="#3B82F6" radius={[2, 2, 0, 0]} name="Completed" />
+              <Bar dataKey="missed" fill="#EF4444" radius={[2, 2, 0, 0]} name="Missed" />
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <p className="text-sm text-slate-400 text-center py-8">No data yet</p>
+          <p className="text-sm text-text-muted text-center py-8">No data yet</p>
         )}
       </div>
     </div>

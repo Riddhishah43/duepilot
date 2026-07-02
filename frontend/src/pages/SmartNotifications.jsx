@@ -2,18 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../services/api";
+import { AlarmClock, Sparkles, BellRing, Target, Flame, AlertTriangle, ClipboardList, Coffee, PartyPopper, Bot, Lightbulb } from "lucide-react";
 
 const subtypeMeta = {
-  start_now: { emoji: "⏰", label: "Start Now", color: "bg-primary/10 border-primary/20" },
-  best_time: { emoji: "🌟", label: "Best Time", color: "bg-warning/10 border-warning/20" },
-  rescue: { emoji: "🚨", label: "Rescue", color: "bg-accent/10 border-accent/20" },
-  focus: { emoji: "🎯", label: "Focus", color: "bg-success/10 border-success/20" },
-  habit: { emoji: "🔥", label: "Streak", color: "bg-orange-500/10 border-orange-500/20" },
-  overload: { emoji: "⚠️", label: "Overload", color: "bg-accent/10 border-accent/20" },
-  missed: { emoji: "📋", label: "Missed", color: "bg-primary/10 border-primary/20" },
-  break: { emoji: "☕", label: "Break", color: "bg-teal-500/10 border-teal-500/20" },
-  prediction: { emoji: "🔮", label: "Prediction", color: "bg-indigo-500/10 border-indigo-500/20" },
-  reinforcement: { emoji: "🎉", label: "Great Work", color: "bg-success/10 border-success/20" },
+  start_now: { icon: AlarmClock, label: "Start Now", color: "bg-accent-light border-accent" },
+  best_time: { icon: Sparkles, label: "Best Time", color: "bg-warning-light border-warning" },
+  rescue: { icon: BellRing, label: "Rescue", color: "bg-danger-light border-danger" },
+  focus: { icon: Target, label: "Focus", color: "bg-success-light border-success" },
+  habit: { icon: Flame, label: "Streak", color: "bg-warning-light border-warning" },
+  overload: { icon: AlertTriangle, label: "Overload", color: "bg-danger-light border-danger" },
+  missed: { icon: ClipboardList, label: "Missed", color: "bg-accent-light border-accent" },
+  break: { icon: Coffee, label: "Break", color: "bg-success-light border-success" },
+  prediction: { icon: Sparkles, label: "Prediction", color: "bg-accent-light border-accent" },
+  reinforcement: { icon: PartyPopper, label: "Great Work", color: "bg-success-light border-success" },
 };
 
 export default function SmartNotifications() {
@@ -81,12 +82,12 @@ export default function SmartNotifications() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold">Smart AI Notifications</h1>
-          <p className="text-sm text-text-muted">Context-aware reminders that help you act</p>
+          <h1 className="page-heading">Smart AI Notifications</h1>
+          <p className="page-subheading">Context-aware reminders that help you act</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={markAllRead} className="btn-ghost text-xs">Mark All Read</button>
-          <button onClick={generateNow} disabled={generating} className="btn-primary text-sm">
+          <button onClick={markAllRead} className="btn btn-ghost text-xs">Mark All Read</button>
+          <button onClick={generateNow} disabled={generating} className="btn btn-primary text-sm">
             {generating ? "Analyzing..." : "Generate Now"}
           </button>
         </div>
@@ -94,23 +95,23 @@ export default function SmartNotifications() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
+          <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
         </div>
       ) : notifications.length === 0 ? (
         <div className="card text-center py-12">
-          <p className="text-3xl mb-2">🤖</p>
+          <p className="text-3xl mb-2"><Bot size={36} /></p>
           <p className="font-semibold text-sm">No smart notifications yet</p>
-          <p className="text-xs text-slate-400 mt-1 mb-4">
+          <p className="text-xs text-text-muted mt-1 mb-4">
             Click "Generate Now" to get AI-powered personalized reminders
           </p>
-          <button onClick={generateNow} disabled={generating} className="btn-primary text-sm">
+          <button onClick={generateNow} disabled={generating} className="btn btn-primary text-sm">
             {generating ? "Analyzing..." : "Generate Smart Notifications"}
           </button>
         </div>
       ) : (
         <div className="space-y-2">
           {notifications.map((n) => {
-            const meta = subtypeMeta[n.subtype] || { emoji: "💡", label: n.subtype, color: "bg-bg-elevated border-default/50" };
+            const meta = subtypeMeta[n.subtype] || { icon: Lightbulb, label: n.subtype, color: "bg-bg-secondary border-border" };
             return (
               <div
                 key={n._id}
@@ -118,18 +119,18 @@ export default function SmartNotifications() {
                 onClick={() => handleAction(n)}
               >
                 <div className="flex items-start gap-3">
-                  <span className="text-xl mt-0.5">{meta.emoji}</span>
+                  <span className="text-xl mt-0.5"><meta.icon size={24} /></span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="text-sm font-semibold">{n.title}</h3>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-bg-elevated text-text-muted border border-default/50">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-bg-secondary text-text-muted border border-border">
                         {meta.label}
                       </span>
-                      {!n.read && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
+                      {!n.read && <span className="w-2 h-2 rounded-full bg-accent shrink-0" />}
                     </div>
                     <p className="text-xs text-text-muted">{n.message}</p>
                     {n.actionUrl && (
-                      <p className="text-[11px] text-primary font-medium mt-1">
+                      <p className="text-[11px] text-accent font-medium mt-1">
                         {n.actionUrl === "/focus" ? "Start Focus Session →" :
                          n.actionUrl === "/rescue" ? "Activate Rescue Mode →" :
                          n.actionUrl === "/tasks" ? "View Tasks →" :
@@ -141,7 +142,7 @@ export default function SmartNotifications() {
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); markRead(n._id); }}
-                    className="text-slate-500 hover:text-slate-300 text-lg shrink-0"
+                    className="text-text-secondary hover:text-text-primary text-lg shrink-0"
                   >
                     ×
                   </button>

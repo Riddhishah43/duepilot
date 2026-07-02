@@ -1,26 +1,28 @@
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
-import Landing from "./pages/Landing";
-import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import TaskManager from "./pages/TaskManager";
-import StudyPlanner from "./pages/StudyPlanner";
-import PatternInsights from "./pages/PatternInsights";
-import SmartNotifications from "./pages/SmartNotifications";
-import Goals from "./pages/Goals";
-import Targets from "./pages/Targets";
-import Analytics from "./pages/Analytics";
-import AICoach from "./pages/AICoach";
-import FocusMode from "./pages/FocusMode";
-import RescueMode from "./pages/RescueMode";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+
+const Landing = lazy(() => import("./pages/Landing"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const TaskManager = lazy(() => import("./pages/TaskManager"));
+const StudyPlanner = lazy(() => import("./pages/StudyPlanner"));
+const PatternInsights = lazy(() => import("./pages/PatternInsights"));
+const SmartNotifications = lazy(() => import("./pages/SmartNotifications"));
+const Goals = lazy(() => import("./pages/Goals"));
+const Targets = lazy(() => import("./pages/Targets"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const AICoach = lazy(() => import("./pages/AICoach"));
+const FocusMode = lazy(() => import("./pages/FocusMode"));
+const RescueMode = lazy(() => import("./pages/RescueMode"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function WakeUpScreen() {
   return (
@@ -79,24 +81,30 @@ function App() {
           duration: 4000,
         }}
       />
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<PublicRoute><AuthLayout><Auth /></AuthLayout></PublicRoute>} />
-        <Route path="/dashboard" element={<ErrorBoundary><ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/tasks" element={<ErrorBoundary><ProtectedRoute><MainLayout><TaskManager /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/goals" element={<ErrorBoundary><ProtectedRoute><MainLayout><Goals /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/targets" element={<ErrorBoundary><ProtectedRoute><MainLayout><Targets /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/analytics" element={<ErrorBoundary><ProtectedRoute><MainLayout><Analytics /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/ai-coach" element={<ErrorBoundary><ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/focus" element={<ErrorBoundary><ProtectedRoute><MainLayout><FocusMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/rescue" element={<ErrorBoundary><ProtectedRoute><MainLayout><RescueMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/study-planner" element={<ErrorBoundary><ProtectedRoute><MainLayout><StudyPlanner /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/insights" element={<ErrorBoundary><ProtectedRoute><MainLayout><PatternInsights /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/notifications" element={<ErrorBoundary><ProtectedRoute><MainLayout><SmartNotifications /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/profile" element={<ErrorBoundary><ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="/settings" element={<ErrorBoundary><ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute></ErrorBoundary>} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen" style={{ background: "var(--bg-primary)" }}>
+          <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[var(--accent-2)] animate-spin" />
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<PublicRoute><AuthLayout><Auth /></AuthLayout></PublicRoute>} />
+          <Route path="/dashboard" element={<ErrorBoundary><ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/tasks" element={<ErrorBoundary><ProtectedRoute><MainLayout><TaskManager /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/goals" element={<ErrorBoundary><ProtectedRoute><MainLayout><Goals /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/targets" element={<ErrorBoundary><ProtectedRoute><MainLayout><Targets /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/analytics" element={<ErrorBoundary><ProtectedRoute><MainLayout><Analytics /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/ai-coach" element={<ErrorBoundary><ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/focus" element={<ErrorBoundary><ProtectedRoute><MainLayout><FocusMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/rescue" element={<ErrorBoundary><ProtectedRoute><MainLayout><RescueMode /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/study-planner" element={<ErrorBoundary><ProtectedRoute><MainLayout><StudyPlanner /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/insights" element={<ErrorBoundary><ProtectedRoute><MainLayout><PatternInsights /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/notifications" element={<ErrorBoundary><ProtectedRoute><MainLayout><SmartNotifications /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/profile" element={<ErrorBoundary><ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="/settings" element={<ErrorBoundary><ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute></ErrorBoundary>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </AuthProvider>
     </ThemeProvider>
   );

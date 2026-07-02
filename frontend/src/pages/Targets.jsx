@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Target, X } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
@@ -60,13 +61,13 @@ export default function Targets() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-lg font-semibold">Targets</h1>
-        <p className="text-sm text-text-muted">Set personal deadlines before the actual due date</p>
+        <h1 className="page-heading">Targets</h1>
+        <p className="page-subheading">Set personal deadlines before the actual due date</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="card text-center">
-          <p className="text-2xl font-bold text-primary">{tasksWithTargets.length}</p>
+          <p className="text-2xl font-bold text-accent">{tasksWithTargets.length}</p>
           <p className="text-xs text-text-muted">Targets Set</p>
         </div>
         <div className="card text-center">
@@ -74,15 +75,15 @@ export default function Targets() {
           <p className="text-xs text-text-muted">At Risk</p>
         </div>
         <div className="card text-center">
-          <p className="text-2xl font-bold text-accent">{tasks.filter((t) => isMissed(t)).length}</p>
+          <p className="text-2xl font-bold text-danger">{tasks.filter((t) => isMissed(t)).length}</p>
           <p className="text-xs text-text-muted">Missed</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div></div>
+        <div className="flex justify-center py-10"><div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin"></div></div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-10 text-slate-400"><p className="text-3xl mb-2">🎯</p><p className="text-sm">No active tasks to set targets on</p></div>
+        <div className="text-center py-10 text-text-muted"><p className="text-3xl mb-2"><Target size={36} /></p><p className="text-sm">No active tasks to set targets on</p></div>
       ) : (
         <div className="space-y-3">
           {tasksWithTargets.length > 0 && (
@@ -90,25 +91,25 @@ export default function Targets() {
               <h2 className="font-semibold text-sm mb-2">Tasks with Targets</h2>
               <div className="space-y-1.5">
                 {tasksWithTargets.map((task) => (
-                  <div key={task._id} className={`card flex items-center justify-between ${isMissed(task) ? "border-accent/30 bg-accent/5" : isAtRisk(task) ? "border-warning/30 bg-warning/5" : ""}`}>
+                  <div key={task._id} className={`card flex items-center justify-between ${isMissed(task) ? "border-danger bg-danger-light" : isAtRisk(task) ? "border-warning/30 bg-warning/5" : ""}`}>
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm truncate">{task.title}</p>
-                      <p className="text-xs text-slate-400">Due: {new Date(task.deadline).toLocaleDateString()}</p>
+                      <p className="text-xs text-text-muted">Due: {new Date(task.deadline).toLocaleDateString()}</p>
                     </div>
                     <div className="flex items-center gap-3 ml-3 shrink-0">
                       {editingId === task._id ? (
                         <div className="flex items-center gap-1.5">
-                          <input type="date" className="input-field text-xs py-1 px-2 w-36" value={editValue} onChange={(e) => setEditValue(e.target.value)} />
-                          <button onClick={() => setTarget(task._id)} className="btn-primary text-xs py-1 px-2">Save</button>
-                          <button onClick={() => { setEditingId(null); setEditValue(""); }} className="btn-ghost text-xs py-1 px-2">Cancel</button>
+                          <input type="date" className="input text-xs py-1 px-2 w-36" value={editValue} onChange={(e) => setEditValue(e.target.value)} />
+                          <button onClick={() => setTarget(task._id)} className="btn btn-primary text-xs py-1 px-2">Save</button>
+                          <button onClick={() => { setEditingId(null); setEditValue(""); }} className="btn btn-ghost text-xs py-1 px-2">Cancel</button>
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs font-medium ${isMissed(task) ? "text-accent" : isAtRisk(task) ? "text-warning" : "text-primary"}`}>
+                          <span className={`text-xs font-medium ${isMissed(task) ? "text-danger" : isAtRisk(task) ? "text-warning" : "text-accent"}`}>
                             {isMissed(task) ? "Missed" : isAtRisk(task) ? "At Risk" : `Target: ${new Date(task.targetDeadline).toLocaleDateString()}`}
                           </span>
-                          <button onClick={() => { setEditingId(task._id); setEditValue(toDateStr(task.targetDeadline)); }} className="btn-ghost text-xs py-1 px-2">Edit</button>
-                          <button onClick={() => clearTarget(task._id)} className="text-xs text-accent hover:text-accent/80 py-1 px-1">✕</button>
+                          <button onClick={() => { setEditingId(task._id); setEditValue(toDateStr(task.targetDeadline)); }} className="btn btn-ghost text-xs py-1 px-2">Edit</button>
+                          <button onClick={() => clearTarget(task._id)} className="text-xs text-danger hover:text-danger/80 py-1 px-1"><X size={14} /></button>
                         </div>
                       )}
                     </div>
@@ -126,17 +127,17 @@ export default function Targets() {
                   <div key={task._id} className="card flex items-center justify-between">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm truncate">{task.title}</p>
-                      <p className="text-xs text-slate-400">Due: {new Date(task.deadline).toLocaleDateString()}</p>
+                      <p className="text-xs text-text-muted">Due: {new Date(task.deadline).toLocaleDateString()}</p>
                     </div>
                     <div className="flex items-center gap-1.5 ml-3 shrink-0">
                       {editingId === task._id ? (
                         <div className="flex items-center gap-1.5">
-                          <input type="date" className="input-field text-xs py-1 px-2 w-36" value={editValue} onChange={(e) => setEditValue(e.target.value)} />
-                          <button onClick={() => setTarget(task._id)} className="btn-primary text-xs py-1 px-2">Set</button>
-                          <button onClick={() => { setEditingId(null); setEditValue(""); }} className="btn-ghost text-xs py-1 px-2">Cancel</button>
+                          <input type="date" className="input text-xs py-1 px-2 w-36" value={editValue} onChange={(e) => setEditValue(e.target.value)} />
+                          <button onClick={() => setTarget(task._id)} className="btn btn-primary text-xs py-1 px-2">Set</button>
+                          <button onClick={() => { setEditingId(null); setEditValue(""); }} className="btn btn-ghost text-xs py-1 px-2">Cancel</button>
                         </div>
                       ) : (
-                        <button onClick={() => setEditingId(task._id)} className="btn-ghost text-xs py-1 px-2">Set Target</button>
+                        <button onClick={() => setEditingId(task._id)} className="btn btn-ghost text-xs py-1 px-2">Set Target</button>
                       )}
                     </div>
                   </div>

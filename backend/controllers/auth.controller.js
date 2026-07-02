@@ -1,6 +1,14 @@
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const User = require("../models/user.model");
+const Task = require("../models/task.model");
+const Subtask = require("../models/subtask.model");
+const Goal = require("../models/goal.model");
+const Analytics = require("../models/analytics.model");
+const Notification = require("../models/notification.model");
+const CalendarEvent = require("../models/calendarEvent.model");
+const ActionLog = require("../models/actionLog.model");
+const StudyPlan = require("../models/studyPlan.model");
 const { sendPasswordResetEmail } = require("../services/email.service");
 
 const generateToken = (id) => {
@@ -109,7 +117,6 @@ exports.resetPassword = async (req, res, next) => {
 
 exports.demoLogin = async (req, res, next) => {
   try {
-    const User = require("../models/user.model");
     const user = await User.findOne({ email: "googledev@duepilot.com" });
     if (!user) {
       return res.status(404).json({ message: "Demo account not found. Run seed script first." });
@@ -124,16 +131,16 @@ exports.demoLogin = async (req, res, next) => {
 exports.deleteAccount = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const userTaskIds = await require("../models/task.model").find({ userId }).select("_id").then(ts => ts.map(t => t._id));
+    const userTaskIds = await Task.find({ userId }).select("_id").lean().then(ts => ts.map(t => t._id));
     await Promise.all([
-      require("../models/task.model").deleteMany({ userId }),
-      require("../models/subtask.model").deleteMany({ taskId: { $in: userTaskIds } }),
-      require("../models/goal.model").deleteMany({ userId }),
-      require("../models/analytics.model").deleteMany({ userId }),
-      require("../models/notification.model").deleteMany({ userId }),
-      require("../models/calendarEvent.model").deleteMany({ userId }),
-      require("../models/actionLog.model").deleteMany({ userId }),
-      require("../models/studyPlan.model").deleteMany({ userId }),
+      Task.deleteMany({ userId }),
+      Subtask.deleteMany({ taskId: { $in: userTaskIds } }),
+      Goal.deleteMany({ userId }),
+      Analytics.deleteMany({ userId }),
+      Notification.deleteMany({ userId }),
+      CalendarEvent.deleteMany({ userId }),
+      ActionLog.deleteMany({ userId }),
+      StudyPlan.deleteMany({ userId }),
       User.findByIdAndDelete(userId),
     ]);
     res.json({ message: "Account deleted successfully" });

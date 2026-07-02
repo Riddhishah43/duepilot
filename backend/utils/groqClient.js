@@ -13,8 +13,14 @@ async function groqChatCompletion(options, retries = 2) {
         { signal: controller.signal }
       );
       clearTimeout(timeoutId);
-      return JSON.parse(response.choices[0].message.content);
+      const content = response.choices[0]?.message?.content;
+      if (!content) throw new Error("Empty response from Groq API");
+      const parsed = JSON.parse(content);
+      return parsed;
     } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error("Groq API request timed out after 30s");
+      }
       if (attempt === retries) throw error;
       const delay = Math.pow(2, attempt) * 500;
       await new Promise(resolve => setTimeout(resolve, delay));

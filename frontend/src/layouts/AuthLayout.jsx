@@ -8,12 +8,12 @@ export default function AuthLayout({ children }) {
         {/* Logo */}
         <div className="text-center mb-8">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold text-white mx-auto mb-4"
-            style={{ background: "var(--accent-gradient)", boxShadow: "0 4px 24px var(--accent-glow)" }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-white mx-auto mb-3"
+            style={{ background: "var(--accent)" }}
           >
             DP
           </div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          <h1 className="text-xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
             DuePilot AI
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
@@ -21,10 +21,8 @@ export default function AuthLayout({ children }) {
           </p>
         </div>
 
-        {/* Glass card */}
-        <div
-          className="glass-card-static p-7"
-        >
+        {/* Card */}
+        <div className="card p-6">
           {children}
         </div>
 

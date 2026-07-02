@@ -5,26 +5,49 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#8B5CF6",
-        "primary-hover": "#7C3AED",
-        secondary: "#22D3EE",
-        accent: "#FF4D8D",
-        success: "#34D399",
-        warning: "#FBBF24",
-        error: "#F87171",
-        "priority-high": "#FF4D8D",
-        "priority-medium": "#FBBF24",
-        "priority-low": "#34D399",
-        "bg-deep": "rgb(var(--color-bg-deep) / <alpha-value>)",
-        "bg-secondary": "rgb(var(--color-bg-secondary) / <alpha-value>)",
-        "bg-surface": "rgb(var(--color-bg-surface) / <alpha-value>)",
-        "bg-elevated": "rgb(var(--color-bg-elevated) / <alpha-value>)",
-        "border-default": "rgb(var(--color-border-default) / <alpha-value>)",
-        "text-main": "rgb(var(--color-text-main) / <alpha-value>)",
-        "text-muted": "rgb(var(--color-text-muted) / <alpha-value>)",
+        bg: {
+          primary: "rgb(var(--bg-primary) / <alpha-value>)",
+          secondary: "rgb(var(--bg-secondary) / <alpha-value>)",
+          tertiary: "rgb(var(--bg-tertiary) / <alpha-value>)",
+        },
+        card: {
+          bg: "rgb(var(--card-bg) / <alpha-value>)",
+          border: "rgb(var(--card-border) / <alpha-value>)",
+        },
+        text: {
+          primary: "rgb(var(--text-primary) / <alpha-value>)",
+          secondary: "rgb(var(--text-secondary) / <alpha-value>)",
+          muted: "rgb(var(--text-muted) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          hover: "rgb(var(--accent-hover) / <alpha-value>)",
+          light: "var(--accent-light)",
+        },
+        success: {
+          DEFAULT: "rgb(var(--success) / <alpha-value>)",
+          light: "var(--success-light)",
+        },
+        warning: {
+          DEFAULT: "rgb(var(--warning) / <alpha-value>)",
+          light: "var(--warning-light)",
+        },
+        danger: {
+          DEFAULT: "rgb(var(--danger) / <alpha-value>)",
+          light: "var(--danger-light)",
+        },
+        border: {
+          DEFAULT: "rgb(var(--border) / <alpha-value>)",
+          light: "rgb(var(--border-light) / <alpha-value>)",
+        },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      borderRadius: {
+        DEFAULT: "var(--radius)",
+        sm: "var(--radius-sm)",
+        lg: "var(--radius-lg)",
       },
     },
   },

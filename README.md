@@ -87,12 +87,23 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 - Focus / Break / Long Break cycles
 - Session counter and task selection
 
-### 🎨 Theme Toggle
+### 🎨 Design System
 
-- **Light/Dark mode toggle** (🌙/☀️) in the app header
-- Light mode: clean light gray background with dark cards
-- Dark mode: original deep dark theme
-- Persisted to localStorage across sessions
+DuePilot uses a professional, enterprise-grade design system inspired by Linear, Notion, Vercel, and Stripe Dashboard — no glassmorphism, no gradients, no glow effects.
+
+- **Clean & minimal UI** — solid colors, subtle borders, soft shadows, rounded corners (8–12px)
+- **Consistent spacing** — 8px grid system, balanced whitespace
+- **Typography** — Inter font, clear hierarchy (600/500/400), readable line heights
+- **Colors (Light):** `#F8FAFC` bg · `#FFFFFF` surface · `#E5E7EB` border · `#2563EB` accent · `#111827` text
+- **Colors (Dark):** `#0F172A` bg · `#1E293B` card · `#334155` border · `#3B82F6` accent · `#F8FAFC` text
+- **Icons** — Lucide React only (20px consistent stroke)
+- **Buttons** — Solid primary (blue), secondary (white+border), danger (red), ghost (transparent)
+- **Cards** — Simple background + border + soft shadow
+- **Charts** — Muted professional colors, proper legends, consistent tooltips
+- **Light/Dark mode** — Toggle in the app header, persisted to localStorage
+- **Accessibility** — WCAG AA compliant, keyboard navigation, focus rings, proper contrast
+- **Animations** — Minimal fade/scale/slide transitions (150–250ms)
+- **Responsive** — Perfect on desktop, laptop, tablet, and mobile
 
 ### 🔐 Authentication & Security
 
@@ -116,6 +127,38 @@ DuePilot AI combines a full-stack MERN application with the power of Groq's LLaM
 | **Axios** | HTTP client with interceptors |
 | **Recharts** | Charts and data visualization |
 | **React Hot Toast** | Toast notifications |
+| **Lucide React** | Icon library (consistent 20px stroke) |
+
+### Design System Architecture
+
+The design system uses CSS custom properties for theme tokens (colors, radii, shadows) with Tailwind CSS utility classes for all components:
+
+```
+index.css (Design Tokens)
+├── :root { ... }          # Light mode CSS variables
+├── .dark { ... }          # Dark mode overrides
+└── @layer components {    # Reusable component classes
+    ├── .card              # Cards, containers
+    ├── .btn / .btn-*      # Button variants
+    ├── .input             # Form inputs
+    ├── .badge / .badge-*  # Status badges
+    ├── .tabs / .tab-item  # Tab navigation
+    ├── .nav-item          # Sidebar navigation
+    ├── .progress          # Progress bars
+    ├── .modal             # Modal dialogs
+    └── .checkbox          # Custom checkboxes
+    }
+
+tailwind.config.js (Tailwind Mapping)
+└── theme.extend.colors    # Maps CSS vars → Tailwind utilities
+    ├── bg-{primary|secondary|tertiary}
+    ├── text-{primary|secondary|muted}
+    ├── accent / success / warning / danger
+    └── border
+
+Components (Pure Tailwind)
+└── All pages & components use className only — no inline styles
+```
 
 ### Backend
 

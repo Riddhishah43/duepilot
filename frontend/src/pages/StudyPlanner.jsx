@@ -112,48 +112,48 @@ export default function StudyPlanner() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-lg font-semibold">AI Study Planner</h1>
-        <p className="text-sm text-text-muted">Create personalized study schedules with AI</p>
+        <h1 className="page-heading">AI Study Planner</h1>
+        <p className="page-subheading">Create personalized study schedules with AI</p>
       </div>
 
       {!selectedPlan && (
         <div className="card space-y-4">
           <h2 className="font-semibold text-sm">Subjects</h2>
           {subjects.map((subject, i) => (
-            <div key={i} className="flex flex-wrap items-end gap-2 p-3 rounded bg-bg-elevated">
+            <div key={i} className="flex flex-wrap items-end gap-2 p-3 rounded bg-bg-secondary">
               <div className="flex-1 min-w-[140px]">
                 <label className="text-xs text-text-muted mb-0.5 block">Subject Name</label>
-                <input value={subject.name} onChange={(e) => updateSubject(i, "name", e.target.value)} placeholder="e.g. Data Structures" className="input-field text-sm" />
+                <input value={subject.name} onChange={(e) => updateSubject(i, "name", e.target.value)} placeholder="e.g. Data Structures" className="input text-sm" />
               </div>
               <div className="w-[140px]">
                 <label className="text-xs text-text-muted mb-0.5 block">Exam Date</label>
-                <input type="date" value={subject.examDate} onChange={(e) => updateSubject(i, "examDate", e.target.value)} className="input-field text-sm" />
+                <input type="date" value={subject.examDate} onChange={(e) => updateSubject(i, "examDate", e.target.value)} className="input text-sm" />
               </div>
               <div className="w-[140px]">
                 <label className="text-xs text-text-muted mb-0.5 block">Assignment Deadline</label>
-                <input type="date" value={subject.assignmentDeadline} onChange={(e) => updateSubject(i, "assignmentDeadline", e.target.value)} className="input-field text-sm" />
+                <input type="date" value={subject.assignmentDeadline} onChange={(e) => updateSubject(i, "assignmentDeadline", e.target.value)} className="input text-sm" />
               </div>
               <div className="w-[120px]">
                 <label className="text-xs text-text-muted mb-0.5 block">Difficulty</label>
-                <select value={subject.difficulty} onChange={(e) => updateSubject(i, "difficulty", e.target.value)} className="input-field text-sm">
+                <select value={subject.difficulty} onChange={(e) => updateSubject(i, "difficulty", e.target.value)} className="input text-sm">
                   <option value="easy">Easy</option>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
                 </select>
               </div>
-              <button onClick={() => removeSubject(i)} className="text-accent hover:text-accent/80 text-lg p-1">&times;</button>
+              <button onClick={() => removeSubject(i)} className="text-danger hover:text-danger/80 text-lg p-1">&times;</button>
             </div>
           ))}
-          <button onClick={addSubject} className="text-sm text-primary hover:underline">+ Add Subject</button>
+          <button onClick={addSubject} className="text-sm text-accent hover:underline">+ Add Subject</button>
 
           <div className="grid sm:grid-cols-3 gap-4 pt-2">
             <div>
               <label className="text-xs text-text-muted mb-0.5 block">Study Hours / Day</label>
-              <input type="number" min={1} max={16} value={preferences.availableHoursPerDay} onChange={(e) => setPreferences({ ...preferences, availableHoursPerDay: Number(e.target.value) })} className="input-field text-sm" />
+              <input type="number" min={1} max={16} value={preferences.availableHoursPerDay} onChange={(e) => setPreferences({ ...preferences, availableHoursPerDay: Number(e.target.value) })} className="input text-sm" />
             </div>
             <div>
               <label className="text-xs text-text-muted mb-0.5 block">Preferred Time</label>
-              <select value={preferences.preferredTime} onChange={(e) => setPreferences({ ...preferences, preferredTime: e.target.value })} className="input-field text-sm">
+              <select value={preferences.preferredTime} onChange={(e) => setPreferences({ ...preferences, preferredTime: e.target.value })} className="input text-sm">
                 <option value="morning">Morning</option>
                 <option value="afternoon">Afternoon</option>
                 <option value="night">Night</option>
@@ -161,7 +161,7 @@ export default function StudyPlanner() {
             </div>
             <div>
               <label className="text-xs text-text-muted mb-0.5 block">Plan Title (optional)</label>
-              <input value={preferences.title} onChange={(e) => setPreferences({ ...preferences, title: e.target.value })} placeholder="e.g. Semester 1 Plan" className="input-field text-sm" />
+              <input value={preferences.title} onChange={(e) => setPreferences({ ...preferences, title: e.target.value })} placeholder="e.g. Semester 1 Plan" className="input text-sm" />
             </div>
           </div>
 
@@ -169,14 +169,14 @@ export default function StudyPlanner() {
             <label className="text-xs text-text-muted mb-1 block">Days Off</label>
             <div className="flex flex-wrap gap-1.5">
               {DAYS.map((day) => (
-                <button key={day} onClick={() => toggleDayOff(day)} className={`px-3 py-1 text-xs rounded border transition-colors ${preferences.daysOff.includes(day) ? "bg-accent/20 border-accent/30 text-accent" : "bg-bg-surface border-default/50 text-text-muted hover:border-default"}`}>
+                <button key={day} onClick={() => toggleDayOff(day)} className={`px-3 py-1 text-xs rounded border transition-colors ${preferences.daysOff.includes(day) ? "bg-danger-light border-danger text-danger" : "bg-bg-tertiary border-border text-text-muted hover:border-border"}`}>
                   {day}
                 </button>
               ))}
             </div>
           </div>
 
-          <button onClick={generatePlan} disabled={generating} className="btn-primary text-sm">
+          <button onClick={generatePlan} disabled={generating} className="btn btn-primary text-sm">
             {generating ? "Generating..." : "Generate Study Plan"}
           </button>
         </div>
@@ -187,22 +187,22 @@ export default function StudyPlanner() {
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-sm">{selectedPlan.title}</h2>
             <div className="flex gap-2">
-              <button onClick={() => regeneratePlan(selectedPlan._id)} disabled={generating} className="btn-ghost text-xs">Regenerate</button>
-              <button onClick={() => deletePlan(selectedPlan._id)} className="text-xs text-accent hover:text-accent/80 px-3 py-1 rounded hover:bg-accent/10">Delete</button>
-              <button onClick={() => setSelectedPlan(null)} className="btn-ghost text-xs">New Plan</button>
+              <button onClick={() => regeneratePlan(selectedPlan._id)} disabled={generating} className="btn btn-ghost text-xs">Regenerate</button>
+              <button onClick={() => deletePlan(selectedPlan._id)} className="text-xs text-danger hover:text-danger/80 px-3 py-1 rounded hover:bg-danger-light">Delete</button>
+              <button onClick={() => setSelectedPlan(null)} className="btn btn-ghost text-xs">New Plan</button>
             </div>
           </div>
 
           <div className="grid gap-3">
             {selectedPlan.schedule?.map((day, i) => (
               <div key={i} className="card">
-                <h3 className="text-sm font-medium mb-2 text-primary">{day.dayName} — {day.date}</h3>
+                <h3 className="text-sm font-medium mb-2 text-accent">{day.dayName} — {day.date}</h3>
                 <div className="space-y-1.5">
                   {day.sessions?.map((session, j) => (
-                    <div key={j} className="flex items-center gap-3 text-sm p-2 rounded bg-bg-elevated">
-                      <span className="text-xs font-medium text-primary w-28 shrink-0">{session.startTime} – {session.endTime}</span>
+                    <div key={j} className="flex items-center gap-3 text-sm p-2 rounded bg-bg-secondary">
+                      <span className="text-xs font-medium text-accent w-28 shrink-0">{session.startTime} – {session.endTime}</span>
                       <span className="font-medium">{session.subject}</span>
-                      {session.topic && <span className="text-slate-400 text-xs">— {session.topic}</span>}
+                      {session.topic && <span className="text-text-muted text-xs">— {session.topic}</span>}
                     </div>
                   ))}
                 </div>
@@ -217,12 +217,12 @@ export default function StudyPlanner() {
           <h2 className="font-semibold text-sm mb-3">Previous Plans</h2>
           <div className="space-y-1.5">
             {plans.map((plan) => (
-              <div key={plan._id} className="flex items-center justify-between p-2 rounded hover:bg-bg-elevated cursor-pointer" onClick={() => setSelectedPlan(plan)}>
+              <div key={plan._id} className="flex items-center justify-between p-2 rounded hover:bg-bg-secondary cursor-pointer" onClick={() => setSelectedPlan(plan)}>
                 <div>
                   <p className="text-sm font-medium">{plan.title}</p>
-                  <p className="text-xs text-slate-400">{plan.subjects?.length} subjects · {plan.schedule?.length || 0} days</p>
+                  <p className="text-xs text-text-muted">{plan.subjects?.length} subjects · {plan.schedule?.length || 0} days</p>
                 </div>
-                <span className="text-xs text-slate-400">{new Date(plan.createdAt).toLocaleDateString()}</span>
+                <span className="text-xs text-text-muted">{new Date(plan.createdAt).toLocaleDateString()}</span>
               </div>
             ))}
           </div>

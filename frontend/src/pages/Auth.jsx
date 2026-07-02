@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Rocket } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
@@ -43,12 +44,12 @@ export default function Auth() {
   return (
     <div>
       {/* Tabs */}
-      <div className="tab-glass mb-6">
+      <div className="tabs mb-6">
         {["login", "register"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`tab-glass-item${tab === t ? " active" : ""}`}
+            className={`tab-item${tab === t ? " active" : ""}`}
           >
             {t === "login" ? "Sign In" : "Sign Up"}
           </button>
@@ -59,12 +60,12 @@ export default function Auth() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {tab === "register" && (
           <div>
-            <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-sm font-medium mb-1.5 text-text-secondary">
               Name
             </label>
             <input
               type="text"
-              className="input-glass"
+              className="input"
               placeholder="Your name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -73,12 +74,12 @@ export default function Auth() {
           </div>
         )}
         <div>
-          <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+          <label className="block text-sm font-medium mb-1.5 text-text-secondary">
             Email
           </label>
           <input
             type="email"
-            className="input-glass"
+            className="input"
             placeholder="you@example.com"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -86,12 +87,12 @@ export default function Auth() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+          <label className="block text-sm font-medium mb-1.5 text-text-secondary">
             Password
           </label>
           <input
             type="password"
-            className="input-glass"
+            className="input"
             placeholder="At least 6 characters"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -102,7 +103,7 @@ export default function Auth() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full btn-glass py-3 disabled:opacity-60"
+          className="w-full btn btn-primary py-3 disabled:opacity-60"
         >
           {loading ? (
             <span className="flex items-center gap-2">
@@ -118,12 +119,10 @@ export default function Auth() {
       {/* Divider */}
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div style={{ width: "100%", borderTop: "1px solid var(--glass-border)" }} />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center">
-          <span className="px-3 text-xs font-medium" style={{ color: "var(--text-muted)", background: "var(--bg-glass-heavy)", backdropFilter: "blur(30px)", borderRadius: "var(--radius-pill)" }}>
-            or
-          </span>
+          <span className="px-3 text-xs font-medium text-text-muted bg-card-bg">or</span>
         </div>
       </div>
 
@@ -131,12 +130,12 @@ export default function Auth() {
       <button
         onClick={handleDemoLogin}
         disabled={loading}
-        className="w-full btn-glass-secondary py-3 disabled:opacity-60"
+        className="w-full btn btn-secondary py-3 disabled:opacity-60"
       >
         {loading ? (
-          <span className="w-4 h-4 rounded-full border-2 border-[var(--accent-2)] border-t-transparent animate-spin" />
+          <span className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" />
         ) : (
-          "🚀 Try Demo Account"
+          <><Rocket size={20} className="inline" /> Try Demo Account</>
         )}
       </button>
     </div>

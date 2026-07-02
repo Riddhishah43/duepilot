@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require("../utils/logger");
 
 const connectDB = async () => {
   try {
@@ -6,17 +7,16 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 5000,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.error(`MongoDB connection error: ${error.message}`);
-    console.log("Server will start without database connection");
-    return null;
+    logger.error(`MongoDB connection error: ${error.message}`);
+    throw error;
   }
 };
 
 mongoose.connection.on("error", (err) => {
-  console.error(`Mongoose connection error: ${err.message}`);
+  logger.error(`Mongoose connection error: ${err.message}`);
 });
 
 module.exports = connectDB;

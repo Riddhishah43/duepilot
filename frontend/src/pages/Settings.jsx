@@ -124,14 +124,14 @@ export default function Settings() {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-16"><div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" /></div>;
+    return <div className="flex justify-center py-16"><div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin" /></div>;
   }
 
   return (
     <div className="max-w-2xl mx-auto space-y-5">
       <div>
-        <h1 className="text-lg font-semibold">Settings</h1>
-        <p className="text-sm text-text-muted">Customize your experience</p>
+        <h1 className="page-heading">Settings</h1>
+        <p className="page-subheading">Customize your experience</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -140,14 +140,14 @@ export default function Settings() {
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Theme</label>
-              <select className="input-field text-sm" value={prefs.theme} onChange={(e) => { setPrefs({ ...prefs, theme: e.target.value }); setTheme(e.target.value); }}>
+              <select className="input text-sm" value={prefs.theme} onChange={(e) => { setPrefs({ ...prefs, theme: e.target.value }); setTheme(e.target.value); }}>
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
               </select>
             </div>
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Default Task View</label>
-              <select className="input-field text-sm" value={prefs.defaultView} onChange={(e) => setPrefs({ ...prefs, defaultView: e.target.value })}>
+              <select className="input text-sm" value={prefs.defaultView} onChange={(e) => setPrefs({ ...prefs, defaultView: e.target.value })}>
                 <option value="list">List</option>
                 <option value="board">Board</option>
                 <option value="calendar">Calendar</option>
@@ -161,7 +161,7 @@ export default function Settings() {
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Preferred Study Time</label>
-              <select className="input-field text-sm" value={prefs.preferredStudyTime} onChange={(e) => setPrefs({ ...prefs, preferredStudyTime: e.target.value })}>
+              <select className="input text-sm" value={prefs.preferredStudyTime} onChange={(e) => setPrefs({ ...prefs, preferredStudyTime: e.target.value })}>
                 <option value="morning">Morning</option>
                 <option value="afternoon">Afternoon</option>
                 <option value="night">Night</option>
@@ -175,51 +175,51 @@ export default function Settings() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Focus Duration (min)</label>
-              <input type="number" className="input-field text-sm" min={1} max={120} value={prefs.pomodoroDuration} onChange={(e) => setPrefs({ ...prefs, pomodoroDuration: parseInt(e.target.value) })} />
+              <input type="number" className="input text-sm" min={1} max={120} value={prefs.pomodoroDuration} onChange={(e) => setPrefs({ ...prefs, pomodoroDuration: parseInt(e.target.value) })} />
             </div>
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Break Duration (min)</label>
-              <input type="number" className="input-field text-sm" min={1} max={30} value={prefs.breakDuration} onChange={(e) => setPrefs({ ...prefs, breakDuration: parseInt(e.target.value) })} />
+              <input type="number" className="input text-sm" min={1} max={30} value={prefs.breakDuration} onChange={(e) => setPrefs({ ...prefs, breakDuration: parseInt(e.target.value) })} />
             </div>
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Long Break (min)</label>
-              <input type="number" className="input-field text-sm" min={1} max={60} value={prefs.longBreakDuration} onChange={(e) => setPrefs({ ...prefs, longBreakDuration: parseInt(e.target.value) })} />
+              <input type="number" className="input text-sm" min={1} max={60} value={prefs.longBreakDuration} onChange={(e) => setPrefs({ ...prefs, longBreakDuration: parseInt(e.target.value) })} />
             </div>
             <div>
               <label className="block text-xs text-text-muted mb-0.5">Sessions Before Long Break</label>
-              <input type="number" className="input-field text-sm" min={1} max={10} value={prefs.sessionsBeforeLongBreak} onChange={(e) => setPrefs({ ...prefs, sessionsBeforeLongBreak: parseInt(e.target.value) })} />
+              <input type="number" className="input text-sm" min={1} max={10} value={prefs.sessionsBeforeLongBreak} onChange={(e) => setPrefs({ ...prefs, sessionsBeforeLongBreak: parseInt(e.target.value) })} />
             </div>
           </div>
         </div>
 
         <div className="card space-y-3">
           <h2 className="font-semibold text-sm">Smart Notification Preferences</h2>
-          <p className="text-xs text-slate-400">Choose which AI notifications you want to receive</p>
+          <p className="text-xs text-text-muted">Choose which AI notifications you want to receive</p>
           <div className="space-y-1.5">
             {Object.entries(notifLabels).map(([key, label]) => (
-              <label key={key} className="flex items-center gap-2.5 p-1.5 rounded hover:bg-bg-elevated cursor-pointer">
-                <input type="checkbox" checked={prefs.notificationPreferences[key]} onChange={() => toggleNotif(key)} className="w-3.5 h-3.5 accent-primary" />
+              <label key={key} className="flex items-center gap-2.5 p-1.5 rounded hover:bg-bg-secondary cursor-pointer">
+                <input type="checkbox" checked={prefs.notificationPreferences[key]} onChange={() => toggleNotif(key)} className="w-3.5 h-3.5 accent-accent" />
                 <span className="text-xs">{label}</span>
               </label>
             ))}
           </div>
         </div>
 
-        <button type="submit" disabled={saving} className="btn-primary text-sm">{saving ? "Saving..." : "Save All Settings"}</button>
+        <button type="submit" disabled={saving} className="btn btn-primary text-sm">{saving ? "Saving..." : "Save All Settings"}</button>
       </form>
 
       <div className="card space-y-3">
         <h2 className="font-semibold text-sm">Data</h2>
         <div className="flex flex-wrap gap-2">
-          <button onClick={handleExport} className="btn-ghost text-xs">Export Data (JSON)</button>
+          <button onClick={handleExport} className="btn btn-ghost text-xs">Export Data (JSON)</button>
           {confirmDelete ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-accent">Are you sure?</span>
-              <button onClick={deleteAccount} className="text-xs bg-accent text-white px-2 py-1 rounded hover:bg-accent/90">Confirm</button>
+              <span className="text-xs text-danger">Are you sure?</span>
+              <button onClick={deleteAccount} className="btn btn-danger text-xs">Confirm</button>
               <button onClick={() => setConfirmDelete(false)} className="text-xs text-text-muted px-2 py-1">Cancel</button>
             </div>
           ) : (
-            <button onClick={() => setConfirmDelete(true)} className="text-xs text-accent hover:text-accent/80 px-2 py-1 rounded hover:bg-accent/10">Delete Account</button>
+            <button onClick={() => setConfirmDelete(true)} className="text-xs text-danger hover:text-danger/80 px-2 py-1 rounded hover:bg-danger-light">Delete Account</button>
           )}
         </div>
       </div>

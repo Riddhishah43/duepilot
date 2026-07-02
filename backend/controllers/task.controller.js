@@ -114,9 +114,12 @@ exports.updateTask = async (req, res, next) => {
       existingTask.deadline?.toISOString()?.split("T")[0]
     );
 
+    const allowed = ["title", "description", "deadline", "targetDeadline", "estimatedDuration", "priority", "category", "tags", "progress", "notes", "status", "riskScore", "riskReason", "aiRecommendation"];
+    const updates = {};
+    allowed.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
     const task = await Task.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      { ...req.body },
+      updates,
       { new: true, runValidators: true }
     );
 
