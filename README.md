@@ -9,7 +9,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-4.18-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
-[![Groq AI](https://img.shields.io/badge/Groq-LLaMA_3.3--70B-F97316?logo=groq&logoColor=white)](https://groq.com/)
+[![Groq AI](https://img.shields.io/badge/Groq-Qwen_3.8--27B-F97316?logo=groq&logoColor=white)](https://groq.com/)
 [![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
 [![License](https://img.shields.io/badge/License-MIT-355872)](LICENSE)
 
@@ -17,7 +17,7 @@
 
 <br>
 
-🌐 **Live App:** [rs-duepilot.vercel.app](https://rs-duepilot.vercel.app) · **API:** [duepilot-backend-production.up.railway.app](https://duepilot-backend-production.up.railway.app)
+🌐 **Live App:** [rids-duepilot.vercel.app](https://rids-duepilot.vercel.app) · **API:** [duepilot-backend-production.up.railway.app](https://duepilot-backend-production.up.railway.app)
 
 </div>
 
@@ -25,7 +25,7 @@
 
 ## Overview
 
-DuePilot AI combines a full-stack MERN application with the power of Groq's LLaMA 3.3-70B model to create a proactive task management experience. It predicts risks, breaks down complex tasks, generates smart schedules, and provides daily coaching — all through a clean, professional interface.
+DuePilot AI combines a full-stack MERN application with the power of Groq's Qwen 3.8-27B model to create a proactive task management experience. It predicts risks, breaks down complex tasks, generates smart schedules, and provides daily coaching — all through a clean, professional interface.
 
 > No more missed deadlines. Let AI navigate you through every one.
 
@@ -167,7 +167,7 @@ Components (Pure Tailwind)
 | **Node.js** | Runtime |
 | **Express 4** | Web framework |
 | **MongoDB Atlas** | Database (Mongoose ODM) |
-| **Groq SDK** | AI inference (LLaMA 3.3-70B-Versatile) |
+| **Groq SDK** | AI inference (Qwen 3.8-27B) |
 | **JWT** | Authentication tokens |
 | **Bcrypt.js** | Password hashing |
 | **Express Validator** | Request validation |
@@ -285,8 +285,10 @@ duepilot-ai/
 │   ├── services/              # Business logic (Groq AI, Analytics, Calendar)
 │   ├── utils/                 # Helper functions
 │   ├── validators/            # Request validation rules
+│   ├── tests/                 # Jest test suites (11 files, 122 tests)
 │   ├── app.js                 # Express application setup
-│   └── server.js              # Entry point
+│   ├── server.js              # Entry point
+│   └── jest.config.js         # Test configuration
 ├── frontend/
 │   ├── src/
 │   │   ├── components/common/ # Reusable UI components
@@ -294,9 +296,11 @@ duepilot-ai/
 │   │   ├── layouts/           # Page layouts (MainLayout, AuthLayout)
 │   │   ├── pages/             # Route page components (15+ pages)
 │   │   ├── services/          # API client (Axios instance)
+│   │   ├── test/              # Vitest test suites (6 files, 36 tests)
 │   │   ├── App.jsx            # Route definitions
 │   │   └── main.jsx           # Application entry point
 │   ├── index.html
+│   ├── vitest.config.js       # Test configuration
 │   ├── vite.config.js
 │   └── tailwind.config.js
 ├── railway.json               # Railway config-as-code
@@ -436,12 +440,12 @@ All API endpoints are prefixed with `/api`. Protected routes require a `Bearer <
 ## Deployment
 
 The production app is live at:
-- **Frontend:** [rs-duepilot.vercel.app](https://rs-duepilot.vercel.app)
+- **Frontend:** [rids-duepilot.vercel.app](https://rids-duepilot.vercel.app)
 - **Backend API:** [duepilot-backend-production.up.railway.app](https://duepilot-backend-production.up.railway.app)
 
 ### Frontend (Vercel)
 
-The frontend is auto-deployed from GitHub via the Vercel dashboard (project: `duepilot-ai`).
+The frontend is auto-deployed from GitHub via the Vercel dashboard (project: `rids-duepilot`).
 
 ```bash
 cd frontend
@@ -465,11 +469,59 @@ Environment variables set in the Railway dashboard:
 | `JWT_SECRET` | Secret key for JWT signing |
 | `JWT_EXPIRES_IN` | `7d` |
 | `GROQ_API_KEY` | Groq AI API key |
-| `CLIENT_URL` | `https://rs-duepilot.vercel.app` |
+| `CLIENT_URL` | `https://rids-duepilot.vercel.app` |
 
 ### Database
 - MongoDB Atlas cluster — the connection string goes into `MONGODB_URI`
 - IP whitelist: `0.0.0.0/0` (allow from anywhere, required for Railway dynamic IPs)
+
+---
+
+## Testing
+
+DuePilot includes a comprehensive test suite for both backend and frontend.
+
+### Backend (Jest + Supertest)
+
+```bash
+cd backend
+npm install                    # Install dev dependencies (jest, supertest, mongodb-memory-server)
+npm test                       # Run all tests (122 tests, 11 suites)
+npm run test:verbose           # Run with verbose output
+```
+
+Tests use `mongodb-memory-server` for an isolated in-memory MongoDB — no local database required.
+
+| Suite | Tests | Coverage |
+|-------|-------|----------|
+| `utils.test.js` | 10 | Helper functions, date formatting, risk scoring |
+| `validators.test.js` | 18 | Request validation rules for all endpoints |
+| `error.middleware.test.js` | 6 | Error handling middleware |
+| `auth.middleware.test.js` | 4 | JWT authentication middleware |
+| `models.test.js` | 15 | All Mongoose model schemas and statics |
+| `auth.controller.test.js` | 6 | Register, login, profile, demo-login |
+| `task.controller.test.js` | 10 | CRUD, filtering, status transitions |
+| `goal.controller.test.js` | 10 | Goals, milestones, AI planning |
+| `calendar.controller.test.js` | 12 | Events, availability, scheduling |
+| `notification.controller.test.js` | 12 | Smart notifications, CRUD, read status |
+| `ai.controller.test.js` | 19 | All AI endpoints (mocked Groq service) |
+
+### Frontend (Vitest + React Testing Library)
+
+```bash
+cd frontend
+npm install                    # Install dev dependencies (vitest, @testing-library/*)
+npx vitest run                 # Run all tests (36 tests, 6 suites)
+```
+
+| Suite | Tests | Coverage |
+|-------|-------|----------|
+| `ErrorBoundary.test.jsx` | 8 | Error boundary rendering, fallback UI |
+| `StatCard.test.jsx` | 5 | Stat card props, icons, styling |
+| `TaskCard.test.jsx` | 14 | Task card rendering, priorities, progress |
+| `Auth.test.jsx` | 4 | Auth page forms, demo button |
+| `MainLayout.test.jsx` | 5 | Layout, sidebar, theme toggle |
+| `FocusMode.test.jsx` | 6 | Pomodoro timer, controls, sessions |
 
 ---
 

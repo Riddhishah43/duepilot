@@ -166,7 +166,7 @@ Smart rules:
 - Add short breaks between sessions`,
 };
 
-const MODEL = "llama-3.3-70b-versatile";
+const MODEL = "qwen/qwen3.8-27b";
 
 async function analyzeTaskBreakdown(taskTitle, taskDescription) {
   return groqChatCompletion({
