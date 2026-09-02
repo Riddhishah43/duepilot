@@ -321,6 +321,8 @@ async function seed() {
     console.log(`Created ${GOAL_TEMPLATES.length} goals with milestones`);
 
     // Create Analytics entries for 30 days
+    // Streak logic: last 5 days score >= 50, day -6 score < 50 → streak = 5
+    const STREAK_LENGTH = 6;
     console.log("Creating analytics records...");
     for (let i = 29; i >= 0; i--) {
       const date = subDays(now, i);
@@ -333,9 +335,22 @@ async function seed() {
       const pendingOnDay = createdTasks.filter(t =>
         (t.status === "pending" || t.status === "in-progress") && new Date(t.deadline).toDateString() === date.toDateString()
       ).length;
-      const score = completedOnDay > 0
-        ? Math.min(100, Math.round((completedOnDay / Math.max(1, completedOnDay + missedOnDay)) * 100))
-        : randomInt(0, 60);
+
+      let score;
+      if (i < STREAK_LENGTH) {
+        // Today through last (STREAK_LENGTH) days: ensure score >= 50 for streak
+        score = completedOnDay > 0
+          ? Math.max(55, Math.min(100, Math.round((completedOnDay / Math.max(1, completedOnDay + missedOnDay)) * 100)))
+          : randomInt(55, 80);
+      } else if (i === STREAK_LENGTH) {
+        // Day that breaks the streak: score < 50
+        score = randomInt(10, 40);
+      } else {
+        // Older days: random scores
+        score = completedOnDay > 0
+          ? Math.min(100, Math.round((completedOnDay / Math.max(1, completedOnDay + missedOnDay)) * 100))
+          : randomInt(0, 60);
+      }
 
       await Analytics.create({
         userId: user._id,
