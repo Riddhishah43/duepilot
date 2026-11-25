@@ -1,6 +1,15 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://duepilot-backend.onrender.com";
+let envUrl = import.meta.env.VITE_API_URL;
+if (envUrl && envUrl.includes("railway.app")) {
+  envUrl = null;
+}
+
+const API_URL =
+  envUrl ||
+  (import.meta.env.PROD
+    ? "https://duepilot-backend.onrender.com/api"
+    : "http://localhost:5000/api");
 
 const api = axios.create({
   baseURL: API_URL,

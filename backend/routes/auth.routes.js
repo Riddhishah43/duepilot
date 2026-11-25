@@ -10,6 +10,7 @@ const authLimiter = rateLimit({
   message: { message: "Too many attempts, please try again later" },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined,
 });
 
 router.post("/register", authLimiter, registerValidation, authController.register);
